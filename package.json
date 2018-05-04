@@ -44,7 +44,6 @@
     "webpack-hot-middleware": "^2.22.1"
   },
   "dependencies": {
-    "chess.js": "^0.10.2",
     "koa": "^2.5.1"
   }
 }
