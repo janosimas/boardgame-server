@@ -1,0 +1,147 @@
+
+.play-area {
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+}
+
+.main-board {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  background: coral;
+  width: 80%;
+  align-items: center;
+}
+
+.player-board-list {
+  border: 1px solid black;
+  width: 80%;
+  display: flex;
+  flex: 4 1 auto;
+  flex-direction: column;
+}
+
+.player-board {
+  border: 3px solid black;
+  background: grey;
+  display: flex;
+  flex: 1 1 300px;
+  flex-direction: column;
+}
+
+.player-name {
+  height: 10%;
+}
+
+.player-hand {
+  display: flex;
+  flex: 0 1 150px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
+.card {
+  position: relative;
+  margin: 5px;
+}
+
+.card .name {
+  position: absolute;
+  top: 0px
+}
+
+.card .food {
+  position: absolute;
+  bottom: 0px;
+  right: 5%;
+}
+
+.species-list {
+  display: flex;
+  flex: 1 1 50px;
+  flex-direction: row;
+  justify-content: stretch;
+}
+
+.between-species {
+  flex: 1 1 auto;
+}
+
+.specie-board {
+  border-radius:10%;
+  border: 1px solid black;
+  background: #2ecc40;
+  display: flex;
+  flex: 0 1 100px;
+  flex-direction: column;
+}
+
+.highlight-blue {
+  border: 5px double blue;
+}
+
+.highlight-red {
+  border: 5px double red;
+}
+
+.highlight-yellow {
+  border: 5px double yellow;
+}
+
+.highlight-green {
+  border: 5px double rgb(0, 255, 242);
+}
+
+.specie-traits {
+  padding: 5%;
+  border-radius:10%;
+  background: #2eccaa;
+  display: flex;
+  flex: 4 1 auto;
+  flex-direction: column;
+}
+
+.trait {
+  border-radius: 5px;
+  border: 1px solid red;
+  padding: 2px;
+}
+
+.specie-values {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.specie-population {
+  border-radius:30%;
+  border: 1px solid green;
+  margin: 1px;
+}
+
+.specie-body-size {
+  border-radius:30%;
+  border: 1px solid orangered;
+  margin: 1px;
+}
+
+.specie-food {
+  border-radius:50%;
+  border: 1px solid green;
+  margin: 1px;
+  background: green;
+}
+
+.controls {
+  background: #ffffff;
+  position: fixed;
+  right: 0;
+  top: 0;
+  margin: 2%;
+  padding: 2%;
+  border: 1px solid black;
+}

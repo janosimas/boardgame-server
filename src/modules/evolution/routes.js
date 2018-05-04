@@ -6,18 +6,13 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import tic_tac_toe from './tic-tac-toe';
-import evolution from './evolution'
-
+import PassNPlay from './client';
 
 const routes = [
   {
-    name: 'Tic-Tac-Toe',
-    routes: tic_tac_toe.routes,
-  },
-  {
-    name: 'Evolution',
-    routes: evolution.routes,
+    path: '/evolution-passnplay',
+    text: 'Pass\'n\'Play',
+    component: PassNPlay,
   }
 ];
 
