@@ -21,18 +21,18 @@ class Specie {
   eat(food, state) {
     const hungry = this.population - this.food;
     let tempFood = food;
-    if(tempFood > hungry) {
+    if (tempFood > hungry) {
       tempFood = hungry;
     }
     this.food += tempFood;
-    
+
     // sanity check
     if (this.food > this.population) {
       this.food = this.population;
     }
 
     food -= tempFood;
-    if(food === 0) {
+    if (food === 0) {
       return;
     }
 
@@ -41,7 +41,6 @@ class Specie {
         trait.storeFood(food, state);
       }
     }
-    
   }
 
   setIndex(specieIdx) {
@@ -84,13 +83,13 @@ class Specie {
   }
 
   canEat() {
-    if(this.isHungry()) {
+    if (this.isHungry()) {
       return true;
     }
 
     for (const trait of this.traits) {
-      if(trait.canEat) {
-        if(trait.canEat(this)) {
+      if (trait.canEat) {
+        if (trait.canEat(this)) {
           return true;
         }
       }
@@ -105,7 +104,7 @@ class Specie {
 
   isCarnivore() {
     for (const trait of this.traits) {
-      if(trait.carnivore) {
+      if (trait.carnivore) {
         return true;
       }
     }

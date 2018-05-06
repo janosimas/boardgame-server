@@ -48,7 +48,7 @@ const triggerSpecieGotFoodLeft = (species, specieIndex, state, source, type) => 
   const specie = species[specieIndex];
   for (const trait of specie.traits) {
     if (trait.giveFoodLeft && trait.giveFoodLeft(state, source, type)) {
-      eat(species, specieIndex - 1, state, source, type);
+      eat(species, specieIndex - 1, 1, state, source, type);
     }
   }
 };
