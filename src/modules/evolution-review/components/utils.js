@@ -193,13 +193,29 @@ const canBeAttacked = (G, ctx, attackerSpecieId, defendingSpecieId) => {
 const defenseValue = (G, ctx, specieID) => {
   const [specie] = getSpecie(G, ctx, specieID);
 
-  return specie.bodySize;
+  let defValue = specie.bodySize;
+
+  for (const trait of specie.traits) {
+    if (traitsBehaviour.hasOwnProperty(trait.name + 'increaseDefense')) {
+      defValue += traitsBehaviour[trait.name + 'increaseDefense'](G, ctx, specie);
+    }
+  }
+
+  return defValue;
 }
 
 const attackValue = (G, ctx, specieID) => {
   const [specie] = getSpecie(G, ctx, specieID);
 
-  return specie.bodySize;
+  let attValue = specie.bodySize;
+
+  for (const trait of specie.traits) {
+    if (traitsBehaviour.hasOwnProperty(trait.name + 'increaseAttack')) {
+      attValue += traitsBehaviour[trait.name + 'increaseAttack'](G, ctx, specie);
+    }
+  }
+
+  return attValue;
 }
 
 export const drawCard = (state, ctx, playerID, number) => {
