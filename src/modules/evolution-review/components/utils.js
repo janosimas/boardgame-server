@@ -3,6 +3,14 @@ import { FOOD_TYPE } from './food_type';
 import { specieEat } from './specie';
 import { traitsBehaviour } from './traits/base_traits';
 
+export const currentPlayer = (G, ctx) => {
+  return G.players[ctx.currentPlayer];
+};
+
+export const getState = (G) => {
+  return Object.assign({}, G);
+};
+
 export const eat = (state, ctx, specieID, food, source, types, triggerEffects) => {
   if (state[source] < food) {
     food = state[source];
@@ -229,4 +237,73 @@ export const drawCard = (state, ctx, playerID, number) => {
 
     state.players[playerID].hand.push(card);
   }
+};
+
+export const loosePopulation = (state, ctx, specieID) => {
+  const [specie, player] = getSpecie(state, ctx, specieID);
+  specie.population--;
+
+  if (specie.population === 0) {
+    player.species.splice(specieID.specieIdx, 1);
+  }
+};
+
+const triggerPlayerSpecieTrait = (state, ctx, functionName) => {
+  for (const player of state.players) {
+    for (const specie of player.species) {
+      for (const trait of specie.traits) {
+        if (traitsBehaviour.hasOwnProperty(trait.name + functionName)) {
+          traitsBehaviour[trait.name + functionName](state, ctx, specie);
+        }
+      }
+    }
+  }
+};
+
+export const triggerOnPhaseEndTraits = (state, ctx) => {
+  triggerPlayerSpecieTrait(state, ctx, 'onPhaseEnd');
+};
+
+export const triggerOnPhaseBeginTraits = (state, ctx) => {
+  triggerPlayerSpecieTrait(state, ctx, 'onPhaseBegin');
+};
+
+export const triggerBeforeAttack = (state, ctx, defendingSpecieID, attackingSpecieID) => {
+  const [defendingSpecie] = getSpecie(state, ctx, defendingSpecieID);
+  for (const trait of defendingSpecie.traits) {
+    if (traitsBehaviour.hasOwnProperty(trait.name + 'beforeAttack')) {
+      traitsBehaviour[trait.name + 'beforeAttack'](state, ctx, attackingSpecieID, defendingSpecieID);
+    }
+  }
+};
+
+export const attackOtherSpecie = (state, ctx, defendingSpecieID) => {
+  const player = currentPlayer(state, ctx);
+  if (player.selectedSpecie === undefined) {
+    return state;
+  }
+
+  const [specie] = getSpecie(state, ctx, player.selectedSpecie);
+  if (!canEat(state, ctx, player.selectedSpecie)
+    || !specie.isCarnivore()
+    || state.foodBank === 0) {
+    return state;
+  }
+
+  const [defendingSpecie] = getSpecie(state, ctx, defendingSpecieID);
+  if (!canAttack(state, ctx, player.selectedSpecie, defendingSpecieID)) {
+    return state;
+  }
+
+  triggerBeforeAttack(state, ctx, defendingSpecieID, player.selectedSpecie);
+
+  loosePopulation(state, ctx, defendingSpecieID);
+
+  const missingFood = specie.population - specie.food;
+  const food = defendingSpecie.bodySize > missingFood ? missingFood : defendingSpecie.bodySize;
+  eat(state, ctx, player.selectedSpecie, food, 'foodBank', [FOOD_TYPE.MEAT, FOOD_TYPE.ATTACK]);
+
+  player.selectedSpecie = undefined;
+  state.endTurn = true;
+  return state;
 };
