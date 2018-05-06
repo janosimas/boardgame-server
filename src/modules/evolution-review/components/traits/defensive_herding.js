@@ -1,4 +1,4 @@
-import Trait from './trait';
+import { Trait, TRAIT_TYPE } from './trait';
 import { getSpecie } from '../specieID';
 import { traitsBehaviour } from './base_traits';
 
@@ -6,7 +6,7 @@ const name = 'Defensive Herding';
 
 class DefensiveHerding extends Trait {
   constructor(food) {
-    super(name, [], food);
+    super(name, [TRAIT_TYPE.DEFENSIVE, TRAIT_TYPE.CLIMATE], food, 'A Carnivore must be larger in Population to attack this species.');
   }
 }
 

@@ -1,4 +1,4 @@
-import Trait from './trait';
+import { Trait, TRAIT_TYPE } from './trait';
 import { traitsBehaviour } from './base_traits';
 import { getSpecie } from '../specieID';
 
@@ -6,7 +6,7 @@ const name = 'Climbing';
 
 class Climbing extends Trait {
   constructor(food) {
-    super(name, [], food);
+    super(name, [TRAIT_TYPE.DEFENSIVE, TRAIT_TYPE.CARNIVORE], food, 'A Carnivore must have climbing to attack this specie.');
     this.climbing = true;
   }
 }

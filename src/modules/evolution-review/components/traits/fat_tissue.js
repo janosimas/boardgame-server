@@ -1,4 +1,4 @@
-import Trait from './trait';
+import { Trait, TRAIT_TYPE } from './trait';
 import PHASES from '../phases';
 import { isHungry } from '../utils';
 import { getSpecie } from '../specieID';
@@ -8,7 +8,7 @@ const FatTissueName = 'Fat Tissue';
 
 class FatTissue extends Trait {
   constructor(food) {
-    super(FatTissueName, [], food);
+    super(FatTissueName, [TRAIT_TYPE.EATING], food, 'May store food on this card up to its Body Size. Before the Food Cards are revealed, move this food to the species board.');
     this.storedFood = 0;
   }
 }

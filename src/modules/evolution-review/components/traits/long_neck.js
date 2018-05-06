@@ -1,4 +1,4 @@
-import Trait from './trait';
+import { Trait, TRAIT_TYPE } from './trait';
 import PHASES from '../phases';
 import { eat } from '../utils';
 import FOOD_TYPE from '../food_type';
@@ -8,7 +8,7 @@ const name = 'Long Neck';
 
 class LongNeck extends Trait {
   constructor(food) {
-    super(name, [], food);
+    super(name, [TRAIT_TYPE.EATING], food, 'Before Food Cards are revealed, take 1 Plant Food from the Food Bank.');
   }
 }
 

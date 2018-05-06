@@ -1,4 +1,4 @@
-import Trait from './trait';
+import { Trait, TRAIT_TYPE } from './trait';
 import { getSpecie } from '../specieID';
 import { traitsBehaviour } from './base_traits';
 
@@ -6,7 +6,7 @@ const name = 'Horns';
 
 class Horns extends Trait {
   constructor(food) {
-    super(name, [], food);
+    super(name, [TRAIT_TYPE.DEFENSIVE], food, 'A Carnivore must decrease its Population by 1 when attacking this species.');
   }
 }
 

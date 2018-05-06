@@ -1,28 +1,18 @@
 
-class Trait {
-  constructor(name, types, food) {
+export class Trait {
+  constructor(name, types, food, text) {
     this.name = name;
     this.food = food;
     this.types = types;
     this.className = 'trait';
-
-    this.specieIdx = undefined;
-
-    this.setSpecie.bind(this);
-    this.getSpecie.bind(this);
-  }
-
-  getSpecie(state) {
-    const player = state.players[this.playerIndex];
-    const specie = player.species[this.specieIdx];
-
-    return { player: player, specie: specie };
-  }
-
-  setSpecie(playerIndex, specieIdx) {
-    this.playerIndex = playerIndex;
-    this.specieIdx = specieIdx;
+    this.text = text;
   }
 }
 
-export default Trait;
+export const TRAIT_TYPE = {
+  DEFENSIVE: 'Defensive trait',
+  EATING: 'Eating trait',
+  CARNIVORE: 'Carnivore trait',
+  CLIMATE: 'Climate trait',
+  OTHER: 'Other trait'
+};

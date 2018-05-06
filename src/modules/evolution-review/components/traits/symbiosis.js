@@ -1,4 +1,4 @@
-import Trait from './trait';
+import { Trait, TRAIT_TYPE } from './trait';
 import { getSpecie } from '../specieID';
 import { traitsBehaviour } from './base_traits';
 
@@ -6,7 +6,7 @@ const name = 'Symbiosis';
 
 class Symbiosis extends Trait {
   constructor(food) {
-    super(name, [], food);
+    super(name, [TRAIT_TYPE.DEFENSIVE], food, 'This species cannot be attacked if your species to the right has a larger Body Size than this species.');
   }
 }
 

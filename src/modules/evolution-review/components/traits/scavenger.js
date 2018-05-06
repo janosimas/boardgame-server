@@ -1,4 +1,4 @@
-import Trait from './trait';
+import { Trait, TRAIT_TYPE } from './trait';
 import FOOD_TYPE from '../food_type';
 import { traitsBehaviour } from './base_traits';
 
@@ -6,7 +6,7 @@ const name = 'Scavenger';
 
 class Scavenger extends Trait {
   constructor(food) {
-    super(name, [], food);
+    super(name, [TRAIT_TYPE.EATING], food, 'Take 1 food from the Food Bank when any species is attacked by a Carnivore.');
   }
 }
 

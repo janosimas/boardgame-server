@@ -1,4 +1,4 @@
-import Trait from './trait';
+import { Trait, TRAIT_TYPE } from './trait';
 import { AmbushName } from './ambush';
 import { getSpecie } from '../specieID';
 import { traitsBehaviour } from './base_traits';
@@ -7,7 +7,7 @@ const name = 'Warning Call';
 
 class WarningCall extends Trait {
   constructor(food) {
-    super(name, [], food);
+    super(name, [TRAIT_TYPE.DEFENSIVE], food, 'A Carnivore must have Ambush to attack your species that are adjacent to this species.');
   }
 }
 

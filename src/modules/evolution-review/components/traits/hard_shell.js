@@ -1,11 +1,11 @@
-import Trait from './trait';
+import { Trait, TRAIT_TYPE } from './trait';
 import { traitsBehaviour } from './base_traits';
 
 const name = 'HardShell';
 
 class HardShell extends Trait {
   constructor(food) {
-    super(name, [], food);
+    super(name, [TRAIT_TYPE.DEFENSIVE], food, '+4 Body Size when determining if this species can be attacked.');
   }
 }
 

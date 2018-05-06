@@ -1,9 +1,9 @@
-import Trait from './trait';
+import { Trait, TRAIT_TYPE } from './trait';
 
 
 class Carnivore extends Trait {
   constructor(food) {
-    super('Carnivore', [], food);
+    super('Carnivore', [TRAIT_TYPE.CARNIVORE], food, 'Must attack and eat other species. Can never eat plant food.');
 
     this.carnivore = true;
   }

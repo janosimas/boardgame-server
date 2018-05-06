@@ -1,11 +1,11 @@
-import Trait from './trait';
+import { Trait, TRAIT_TYPE } from './trait';
 import { traitsBehaviour } from './base_traits';
 
 const name = 'Cooperation';
 
 class Cooperation extends Trait {
   constructor(food) {
-    super(name, [], food);
+    super(name, [TRAIT_TYPE.EATING], food, 'When this specie takes food, your species to the right takes 1 food from the same source.');
   }
 }
 

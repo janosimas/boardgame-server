@@ -1,4 +1,4 @@
-import Trait from './trait';
+import { Trait, TRAIT_TYPE } from './trait';
 import { getSpecie } from '../specieID';
 import { isHungry } from '../utils';
 import { traitsBehaviour } from './base_traits';
@@ -7,7 +7,7 @@ const name = 'Burrowing';
 
 class Burrowing extends Trait {
   constructor(food) {
-    super(name, [], food);
+    super(name, [TRAIT_TYPE.DEFENSIVE, TRAIT_TYPE.CLIMATE], food, 'This specie cannot be attacked if it has enought food to prevent from starving.');
   }
 }
 

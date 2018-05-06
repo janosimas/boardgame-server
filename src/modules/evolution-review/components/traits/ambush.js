@@ -1,10 +1,10 @@
-import Trait from './trait';
+import { Trait, TRAIT_TYPE } from './trait';
 
 export const AmbushName = 'Ambush';
 
 class Ambush extends Trait {
   constructor(food) {
-    super(AmbushName, [], food);
+    super(AmbushName, [TRAIT_TYPE.CARNIVORE], food, 'Nagates Warning Call when attacking.');
   }
 }
 

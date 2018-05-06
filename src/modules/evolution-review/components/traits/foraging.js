@@ -1,4 +1,4 @@
-import Trait from './trait';
+import { Trait, TRAIT_TYPE } from './trait';
 import FOOD_TYPES from '../food_type';
 import { eat } from '../utils';
 import { traitsBehaviour } from './base_traits';
@@ -7,7 +7,7 @@ const name = 'Foraging';
 
 class Foraging extends Trait {
   constructor(food) {
-    super(name, [], food);
+    super(name, [TRAIT_TYPE.EATING], food, 'Anytime this species eats Plant Food, take 1 additional Plant Food from the same source.');
   }
 }
 
