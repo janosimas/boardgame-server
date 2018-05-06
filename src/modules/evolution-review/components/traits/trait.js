@@ -16,3 +16,11 @@ export const TRAIT_TYPE = {
   CLIMATE: 'Climate trait',
   OTHER: 'Other trait'
 };
+
+export const TRAIT_TYPE_COLOR = {
+  DEFENSIVE: 'gray',
+  EATING: 'green',
+  CARNIVORE: 'red',
+  CLIMATE: 'blue',
+  OTHER: 'yellow'
+}
