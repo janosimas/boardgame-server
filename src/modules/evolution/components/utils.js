@@ -101,8 +101,8 @@ const drawCard = (state, ctx, player, number) => {
 
 /**
  * Check body size and traits of the attacking specie
- * 
- * @param {Specie} specie 
+ *
+ * @param {Specie} specie
  * @param {Specie} attackedSpecie
  */
 const canAttack = (specie, attackedSpecie) => {

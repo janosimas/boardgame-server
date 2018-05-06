@@ -1,10 +1,10 @@
 import { Game } from 'boardgame.io/dist/core';
-import { Specie } from './specie';
-import Player from './player';
-import PHASES from './phases';
-import BaseTraits from './traits/base_traits';
-import FOOD_TYPE from './food_type';
-import { getCardFromHand, eat, canAttack, canBeAttacked, drawCard, getState, currentPlayer } from './utils';
+import { Specie } from './components/specie';
+import Player from './components/player';
+import PHASES from './components/phases';
+import BaseTraits from './components/traits/base_traits';
+import FOOD_TYPE from './components/food_type';
+import { getCardFromHand, eat, canAttack, canBeAttacked, drawCard, getState, currentPlayer } from './components/utils';
 
 const selectSpecie = (G, ctx, specieIndex) => {
   const state = getState(G, ctx);
@@ -92,6 +92,7 @@ const attackOtherSpecie = (G, ctx, attackedPlayerIndex, defendingSpecieIndex) =>
 };
 
 const Evolution = {
+  name: 'Evolution',
   setup: (ctx) => {
     let G = {
       secret: {},

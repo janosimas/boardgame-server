@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Specie} from '../specie';
-import PHASES from '../phases';
+import { Specie } from '../components/specie';
+import PHASES from '../components/phases';
 
 class SpecieBoard extends React.Component {
   render() {
@@ -15,40 +15,41 @@ class SpecieBoard extends React.Component {
 
     const currentPlayer = this.props.ctx.currentPlayer;
     const phase = this.props.ctx.phase;
-    
+
     let clinOnTrait = undefined;
     let clinOnPopulation = undefined;
     let clinOnBodySize = undefined;
 
     if (currentPlayer === player.id) {
       switch (phase) {
-      case PHASES.CARD_ACTION_PHASE:
-        clinOnPopulation = () => this.props.moves.increasePopulation(this.props.id);
-        clinOnBodySize = () => this.props.moves.increaseBodySize(this.props.id);
-        clinOnTrait = () => this.props.moves.newTrait(this.props.id);
-        break;
-      default:
-        break;
+        case PHASES.CARD_ACTION_PHASE:
+          clinOnPopulation = () => this.props.moves.increasePopulation(this.props.id);
+          clinOnBodySize = () => this.props.moves.increaseBodySize(this.props.id);
+          clinOnTrait = () => this.props.moves.newTrait(this.props.id);
+          break;
+        default:
+          break;
       }
     }
 
     let clickOnSpecie = undefined;
-    if(phase === PHASES.EAT_PHASE) {
+    if (phase === PHASES.EAT_PHASE) {
       clickOnSpecie = () => this.props.moves.clickOnSpecie(player.id, this.props.id);
     }
 
-    const specieStyle = specie.isCarnivore() ? { background: '#FFccaa' } : undefined;
+    // const specieStyle = specie.isCarnivore() ? { background: '#FFccaa' } : undefined;
+    const specieStyle = undefined;
 
     let specieBoardClass = 'specie-board';
-    if(phase === PHASES.EAT_PHASE) {
+    if (phase === PHASES.EAT_PHASE) {
       if (currentPlayer === player.id) {
         if (player.selectedSpecie === this.props.id) {
           specieBoardClass += ' highlight-green';
         }
-        
-        if(player.selectedSpecie === undefined
-            && specie.canEat()) {
-          specieBoardClass +=' highlight-blue';
+
+        if (player.selectedSpecie === undefined
+          && specie.canEat()) {
+          specieBoardClass += ' highlight-blue';
         }
       }
     }

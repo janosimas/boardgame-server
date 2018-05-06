@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { Card } from 'boardgame.io/ui';
 
 import SpecieBoard from './specie';
-import Player from '../player';
-import PHASES from '../phases';
+import Player from '../components/player';
+import PHASES from '../components/phases';
 
 class PlayerBoard extends React.Component {
   render() {
@@ -18,27 +18,27 @@ class PlayerBoard extends React.Component {
     const phase = this.props.ctx.phase;
     if (currentPlayer === player.id) {
       switch (phase) {
-      case PHASES.CARD_ACTION_PHASE:
-        createNewSpecie = this.props.moves.createNewSpecie;
+        case PHASES.CARD_ACTION_PHASE:
+          createNewSpecie = this.props.moves.createNewSpecie;
         // falls through
-      case PHASES.PLAY_FOOD_PHASE:
-        clickOnCard = this.props.moves.clickOnCard;
-        break;
-      default:
-        break;
+        case PHASES.PLAY_FOOD_PHASE:
+          clickOnCard = this.props.moves.clickOnCard;
+          break;
+        default:
+          break;
       }
     }
 
-    const handRender = player.hand.map((card, index)  => {
+    const handRender = player.hand.map((card, index) => {
       let className = 'card';
       if (currentPlayer === player.id && player.selectedCardIndex === index) {
-        className +=' highlight-green';
+        className += ' highlight-green';
       }
-      return  <Card 
+      return <Card
         className={className}
         isFaceUp={currentPlayer === this.props.player.id}
-        canHover={currentPlayer === player.id} 
-        onClick={clickOnCard && (() => clickOnCard(index))} 
+        canHover={currentPlayer === player.id}
+        onClick={clickOnCard && (() => clickOnCard(index))}
         front={
           <div>
             <div className='name'>
@@ -52,7 +52,7 @@ class PlayerBoard extends React.Component {
     });
 
     const speciesRender = species.map((specie, index) => {
-      return <SpecieBoard 
+      return <SpecieBoard
         ctx={this.props.ctx}
         player={player}
         moves={this.props.moves}
@@ -63,7 +63,7 @@ class PlayerBoard extends React.Component {
     });
 
     const size = speciesRender.length;
-    for (let index = size; index >= 0 ; index--) {
+    for (let index = size; index >= 0; index--) {
       speciesRender.splice(index, 0, <div className='between-species' key={100 + index} onClick={createNewSpecie && (() => createNewSpecie(index))} ></div>);
     }
 
