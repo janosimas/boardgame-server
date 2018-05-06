@@ -27,7 +27,7 @@ const triggerSpecieGotFood = (state, ctx, specieID, source, types) => {
 const triggerSpecieGotFoodSelf = (state, ctx, specieID, source, types) => {
   const [specie] = getSpecie(state, ctx, specieID);
   for (const trait of specie.traits) {
-    if (traitsBehaviour.hasownproperty(trait.name + 'specieGotFood')) {
+    if (traitsBehaviour.hasOwnProperty(trait.name + 'specieGotFood')) {
       traitsBehaviour[trait.name + 'specieGotFood'](state, ctx, specieID, source, types);
     }
   }
@@ -36,7 +36,7 @@ const triggerSpecieGotFoodSelf = (state, ctx, specieID, source, types) => {
 const triggerSpecieGotFoodLeft = (state, ctx, specieID, source, types) => {
   const [specie] = getSpecie(state, ctx, specieID);
   for (const trait of specie.traits) {
-    if (traitsBehaviour.hasownproperty(trait.name + 'giveFoodLeft')) {
+    if (traitsBehaviour.hasOwnProperty(trait.name + 'giveFoodLeft')) {
       if (traitsBehaviour[trait.name + 'giveFoodLeft'](state, ctx, source, types)) {
         eat(state, ctx, new SpecieID(specieID.playerID, specieID.specieIdx - 1), 1, source, types);
       }
@@ -47,7 +47,7 @@ const triggerSpecieGotFoodLeft = (state, ctx, specieID, source, types) => {
 const triggerSpecieGotFoodRight = (state, ctx, specieID, source, types) => {
   const [specie] = getSpecie(state, ctx, specieID);
   for (const trait of specie.traits) {
-    if (traitsBehaviour.hasownproperty(trait.name + 'giveFoodRight')) {
+    if (traitsBehaviour.hasOwnProperty(trait.name + 'giveFoodRight')) {
       if (traitsBehaviour[trait.name + 'giveFoodRight'](state, ctx, source, types)) {
         eat(state, ctx, new SpecieID(specieID.playerID, specieID.specieIdx + 1), 1, source, types);
       }
@@ -61,7 +61,7 @@ const triggerSpecieGotFoodGlobal = (state, ctx, specieID, source, types) => {
     for (let specieIdx = 0; specieIdx < player.species.length; specieIdx++) {
       const specie = player.species[specieIdx];
       for (const trait of specie.traits) {
-        if (traitsBehaviour.hasownproperty(trait.name + 'globalSpecieGotFood')) {
+        if (traitsBehaviour.hasOwnProperty(trait.name + 'globalSpecieGotFood')) {
           const { food, newSource, newType } = traitsBehaviour[trait.name + 'globalSpecieGotFood'](state, ctx, source, types);
           if (food) {
             eat(state, ctx, new SpecieID(playerID, specieIdx), food, newSource, newType);
@@ -78,7 +78,19 @@ export const isHungry = (G, ctx, specieID) => {
 }
 
 export const canEat = (G, ctx, specieID) => {
-  return isHungry(G, ctx, specieID);
+  if (isHungry(G, ctx, specieID)) {
+    return true;
+  }
+
+  for (const trait of this.traits) {
+    if (traitsBehaviour.hasOwnProperty(trait.name + 'canEat')) {
+      if (trait.canEat(G, ctx, specieID, trait)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
 
 export const canEatFoodType = (G, ctx, specieID, foodtypes) => {
@@ -87,7 +99,7 @@ export const canEatFoodType = (G, ctx, specieID, foodtypes) => {
   } else if (foodtypes.includes(FOOD_TYPE.PLANT)) {
     return canEatPlant(G, ctx, specieID);
   }
-  assert(0);
+
   return false;
 }
 
@@ -131,8 +143,74 @@ export const canIncreaseBodySize = (G, ctx, specieID) => {
 }
 
 export const canAttack = (G, ctx, attackingSpecieID, defendingSpecieID) => {
-  const [attackingSpecie] = getSpecie(G, ctx, attackingSpecieID);
-  const [defendingSpecie] = getSpecie(G, ctx, defendingSpecieID);
+  if (!(attackValue(G, ctx, attackingSpecieID) > defenseValue(G, ctx, defendingSpecieID))) {
+    return false;
+  }
 
-  return attackingSpecie.bodySize > defendingSpecie.bodySize;
+  if (!canBeAttacked(G, ctx, attackingSpecieID, defendingSpecieID)) {
+    return false;
+  }
+
+  return true;
 }
+
+const canBeAttacked = (G, ctx, attackerSpecieId, defendingSpecieId) => {
+  const [defendingSpecie, player] = getSpecie(G, ctx, defendingSpecieId);
+  for (const trait of defendingSpecie.traits) {
+    if (traitsBehaviour.hasOwnProperty(trait.name + 'canBeAttackedBy')) {
+      if (!traitsBehaviour[trait.name + 'canBeAttackedBy'](G, ctx, defendingSpecieId, attackerSpecieId)) {
+        return false;
+      }
+    }
+  }
+
+
+  if (defendingSpecieId.specieIdx > 0) {
+    const leftDefendingSpecie = getSpecie(G, ctx, new SpecieID(defendingSpecieId.playerID, defendingSpecieId.specieIdx - 1));
+    for (const trait of leftDefendingSpecie.traits) {
+      if (traitsBehaviour.hasOwnProperty(trait.name + 'canBeAttackedByLeft')) {
+        if (!traitsBehaviour[trait.name + 'canBeAttackedByLeft'](G, ctx, defendingSpecieId, attackerSpecieId)) {
+          return false;
+        }
+      }
+    }
+  }
+
+  if (defendingSpecieId.specieIdx + 1 < player.species.length) {
+    const rightDefendingSpecie = getSpecie(G, ctx, new SpecieID(defendingSpecieId.playerID, defendingSpecieId.specieIdx + 1));
+    for (const trait of rightDefendingSpecie.traits) {
+      if (traitsBehaviour.hasOwnProperty(trait.name + 'canBeAttackedByLeft')) {
+        if (!traitsBehaviour[trait.name + 'canBeAttackedByLeft'](G, ctx, defendingSpecieId, attackerSpecieId)) {
+          return false;
+        }
+      }
+    }
+  }
+
+  return true;
+};
+
+const defenseValue = (G, ctx, specieID) => {
+  const [specie] = getSpecie(G, ctx, specieID);
+
+  return specie.bodySize;
+}
+
+const attackValue = (G, ctx, specieID) => {
+  const [specie] = getSpecie(G, ctx, specieID);
+
+  return specie.bodySize;
+}
+
+export const drawCard = (state, ctx, playerID, number) => {
+  number = number || 1;
+  for (let index = 0; index < number; index++) {
+    const card = state.secret.traitsDeck.pop();
+    if (!card) {
+      // empty deck
+      break;
+    }
+
+    state.players[playerID].hand.push(card);
+  }
+};

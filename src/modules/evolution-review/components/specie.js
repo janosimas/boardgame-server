@@ -21,7 +21,7 @@ export const specieEat = (state, ctx, specieID, food) => {
   }
 
   for (const trait of specie.traits) {
-    if (traitsBehaviour.hasownproperty(trait.name + 'storeFood')) {
+    if (traitsBehaviour.hasOwnProperty(trait.name + 'storeFood')) {
       traitsBehaviour[trait.name + 'storeFood'](state, ctx, specieID, trait, food);
     }
   }
