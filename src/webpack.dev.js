@@ -14,6 +14,7 @@ const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const port = process.env.PORT || 8000;
 
 module.exports = {
+  mode: 'development',
   entry: ['webpack-hot-middleware/client', path.resolve(__dirname, 'index.js')],
   devtool: 'eval-source-map',
   output: {

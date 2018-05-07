@@ -5,7 +5,8 @@ import { Card } from 'boardgame.io/ui';
 
 import SpecieBoard from './specie';
 import Player from '../components/player';
-import PHASES from '../components/phases';
+import { PHASES } from '../components/phases';
+import { SpecieID } from '../components/specieID';
 
 class PlayerBoard extends React.Component {
   render() {
@@ -60,8 +61,7 @@ class PlayerBoard extends React.Component {
         ctx={ctx}
         player={player}
         moves={moves}
-        specie={specie}
-        id={index}
+        specieID={new SpecieID(player.id, index)}
         key={index}
       />;
     });

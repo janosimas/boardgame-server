@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import PlayerBoard from './player';
 
 import './board.css';
-import PHASES from '../components/phases';
+import { PHASES } from '../components/phases';
 import { currentPlayer } from '../components/utils';
 
 class EvolutionBoard extends React.Component {
@@ -18,23 +18,23 @@ class EvolutionBoard extends React.Component {
           this.props.moves.clickOnCardForFood(cardIndex);
         }
       },
-      clickOnSpecie: (playerId, specieIndex) => {
-        this.props.moves.clickOnSpecie(playerId, specieIndex);
+      clickOnSpecie: (specieID) => {
+        this.props.moves.clickOnSpecie(specieID);
       },
       clickOnWateringHole: () => {
         this.props.moves.eatFromWateringHole();
       },
-      newTrait: (specieIndex) => {
-        this.props.moves.newTrait(specieIndex);
+      newTrait: (specieID) => {
+        this.props.moves.newTrait(specieID);
       },
-      increasePopulation: (specieIndex) => {
-        this.props.moves.increasePopulation(specieIndex);
+      increasePopulation: (specieID) => {
+        this.props.moves.increasePopulation(specieID);
       },
-      increaseBodySize: (specieIndex) => {
-        this.props.moves.increaseBodySize(specieIndex);
+      increaseBodySize: (specieID) => {
+        this.props.moves.increaseBodySize(specieID);
       },
-      createNewSpecie: (specieIndex) => {
-        this.props.moves.createNewSpecie(specieIndex);
+      createNewSpecie: (index) => {
+        this.props.moves.createNewSpecie(index);
       },
       onClickEndTurn: () => {
         this.props.moves.endTurn();

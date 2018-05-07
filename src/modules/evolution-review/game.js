@@ -1,18 +1,11 @@
 import { Game } from 'boardgame.io/dist/core';
 import { Specie } from './components/specie';
 import Player from './components/player';
-import PHASES from './components/phases';
-import BaseTraits from './components/traits/base_traits';
-import FOOD_TYPE from './components/food_type';
-import { getCardFromHand, eat, drawCard, getState, currentPlayer } from './components/utils';
-import { SpecieID } from './components/specieID';
-
-const selectSpecie = (G, ctx, specieIndex) => {
-  const state = getState(G, ctx);
-  const player = currentPlayer(state, ctx);
-  player.selectedSpecie = new SpecieID(player.id, specieIndex);
-  return state;
-};
+import { PHASES } from './components/phases';
+import { BaseTraits } from './components/traits/base_traits';
+import { FOOD_TYPE } from './components/food_type';
+import { getCardFromHand, eat, drawCard, getState, currentPlayer, attackOtherSpecie, isCarnivore, canEat, canAddTrait, canIncreasePopulation, canIncreaseBodySize, triggerOnPhaseBeginTraits, triggerOnPhaseEndTraits, loosePopulation } from './components/utils';
+import { SpecieID, getSpecie, getPlayer } from './components/specieID';
 
 const Evolution = {
   name: 'Evolution',
@@ -69,61 +62,53 @@ const Evolution = {
       return state;
     },
 
-    newTrait: (G, ctx, specieIndex) => {
+    newTrait: (G, ctx, specieID) => {
       const state = getState(G, ctx);
       const player = currentPlayer(state, ctx);
       if (player.selectedCardIndex === undefined) {
         return G;
       }
 
-      const specie = player.species[specieIndex];
-      if (specie.traits.length >= 4) {
+      const trait = getCardFromHand(state, ctx, player.selectedCardIndex);
+      if(!canAddTrait(state, ctx, specieID, trait)) {
         return G;
       }
 
-      const card = getCardFromHand(state, ctx, player.selectedCardIndex);
-      for (const trait of specie.traits) {
-        if (trait.name === card.name) {
-          player.hand.push(card);
-          return G;
-        }
-      }
-
-      card.setSpecie(player.id, specieIndex);
-      specie.traits.push(card);
+      const [specie] = getSpecie(state, ctx, specieID);
+      specie.traits.push(trait);
       player.selectedCardIndex = undefined;
       return state;
     },
-    increasePopulation: (G, ctx, specieIndex) => {
+    increasePopulation: (G, ctx, specieID) => {
       const state = getState(G, ctx);
       const player = currentPlayer(state, ctx);
       if (player.selectedCardIndex === undefined) {
         return G;
       }
 
-      const specie = player.species[specieIndex];
-      if (specie.population >= 9) {
+      if(!canIncreasePopulation(state, ctx, specieID)) {
         return G;
       }
 
       getCardFromHand(state, ctx, player.selectedCardIndex);
+      const [specie] = getSpecie(state, ctx, specieID);
       specie.population++;
       player.selectedCardIndex = undefined;
       return state;
     },
-    increaseBodySize: (G, ctx, specieIndex) => {
+    increaseBodySize: (G, ctx, specieID) => {
       const state = getState(G, ctx);
       const player = currentPlayer(state, ctx);
       if (player.selectedCardIndex === undefined) {
         return G;
       }
 
-      const specie = player.species[specieIndex];
-      if (specie.bodySize >= 9) {
+      if(!canIncreaseBodySize(state, ctx, specieID)) {
         return G;
       }
 
       getCardFromHand(state, ctx, player.selectedCardIndex);
+      const [specie] = getSpecie(state, ctx, specieID);
       specie.bodySize++;
       player.selectedCardIndex = undefined;
       return state;
@@ -136,37 +121,39 @@ const Evolution = {
       }
 
       getCardFromHand(state, ctx, player.selectedCardIndex);
-      player.species.splice(position, 0, new Specie(player.id, position));
+      player.species.splice(position, 0, new Specie());
       player.selectedCardIndex = undefined;
       return state;
     },
     //////////////////////////////////////////
     // eat phase actions
-    clickOnSpecie: (G, ctx, playerId, specieIndex) => {
+    clickOnSpecie: (G, ctx, specieID) => {
       const state = getState(G, ctx);
       const player = currentPlayer(state, ctx);
-      if (playerId === player.id) {
+      const clickedPlayer = getPlayer(state, ctx, specieID);
+      if (clickedPlayer.id === player.id) {
         // select specie
         if (player.selectedSpecie === undefined) {
-          return selectSpecie(G, ctx, specieIndex);
+          player.selectedSpecie = specieID;
+          return state;
         }
 
         // deselect specie
-        if (player.selectedSpecie === specieIndex) {
+        if (player.selectedSpecie === specieID) {
           player.selectedSpecie = undefined;
           return state;
         }
 
         // change selection (not carnivore)
-        const specie = player.species[specieIndex];
-        if (playerId === player.id && !specie.isCarnivore()) {
-          return selectSpecie(G, ctx, specieIndex);
+        if (clickedPlayer.id === player.id && !isCarnivore(state, ctx, specieID)) {
+          player.selectedSpecie = specieID;
+          return state;
         }
 
         // attack owned specie
-        return attackOtherSpecie(G, ctx, playerId, specieIndex);
+        return attackOtherSpecie(state, ctx, specieID);
       } else {
-        return attackOtherSpecie(G, ctx, playerId, specieIndex);
+        return attackOtherSpecie(state, ctx, specieID);
       }
     },
     eatFromWateringHole: (G, ctx) => {
@@ -176,15 +163,15 @@ const Evolution = {
         return G;
       }
 
-      const specie = player.species[player.selectedSpecie];
-      if (!specie.canEat()
-        || specie.isCarnivore()
+      const specieID = player.selectedSpecie;
+      if (!canEat(G, ctx, specieID)
+        || isCarnivore(G, ctx, specieID)
         || state.wateringHole === 0) {
         return G;
       }
 
       let food = 1;
-      eat(player.species, player.selectedSpecie, food, state, 'wateringHole', [FOOD_TYPE.PLANT]);
+      eat(state, ctx, specieID, food, 'wateringHole', [FOOD_TYPE.PLANT]);
 
       player.selectedSpecie = undefined;
       state.endTurn = true;
@@ -219,7 +206,7 @@ const Evolution = {
           const state = getState(G, ctx);
           state.secret.selectedCards = [];
           for (const player of state.players) {
-            drawCard(state, ctx, player, 4 + player.species.length);
+            drawCard(state, ctx, player.id, 4 + player.species.length);
           }
 
           triggerOnPhaseBeginTraits(state, ctx);
@@ -331,7 +318,7 @@ const Evolution = {
               const specie = player.species[index];
 
               while (specie.population > specie.food) {
-                loosePopulation(state, ctx, player.species, index);
+                loosePopulation(state, ctx, new SpecieID(player.id, index));
               }
 
               player.food += specie.food;
@@ -342,13 +329,12 @@ const Evolution = {
           for (let index = 0; index < state.players.length; index++) {
             const player = state.players[index];
             if (player.species.length === 0) {
-              player.species.push(new Specie(index, 0));
+              player.species.push(new Specie());
             }
             player.endTurn = false;
           }
 
           triggerOnPhaseEndTraits(state, ctx);
-
           return state;
         },
         onTurnBegin: (G, ctx) => {

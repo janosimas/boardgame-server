@@ -127,9 +127,6 @@ export const isCarnivore = (G, ctx, specieID) => {
 
 export const canAddTrait = (G, ctx, specieID, trait) => {
   const [specie] = getSpecie(G, ctx, specieID);
-  if (specie.traits.length === 4) {
-    return false;
-  }
 
   for (const ownedTrait of specie.traits) {
     if (trait.name === ownedTrait.name) {
@@ -137,7 +134,11 @@ export const canAddTrait = (G, ctx, specieID, trait) => {
     }
   }
 
-  return true;
+  if (specie.traits.length < 4) {
+    return true;
+  }else {
+    return false;
+  }
 }
 
 export const canIncreasePopulation = (G, ctx, specieID) => {
@@ -306,4 +307,15 @@ export const attackOtherSpecie = (state, ctx, defendingSpecieID) => {
   player.selectedSpecie = undefined;
   state.endTurn = true;
   return state;
+};
+
+export const getCardFromHand = (state, ctx, index) => {
+  const player = currentPlayer(state, ctx);
+  // sanity check
+  if (index < 0 || index > player.hand.length) {
+    return undefined;
+  }
+
+  const card = player.hand.splice(index, 1)[0];
+  return card;
 };

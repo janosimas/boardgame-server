@@ -7,7 +7,7 @@
  */
 
 import tic_tac_toe from './tic-tac-toe';
-import evolution from './evolution'
+import evolution from './evolution-review'
 
 
 const routes = [

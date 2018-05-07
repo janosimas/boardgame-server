@@ -11,5 +11,5 @@ export const getPlayer = (G, ctx, specieID) => {
 
 export const getSpecie = (G, ctx, specieID) => {
   const player = getPlayer(G, ctx, specieID);
-  return [ player.species[specieID], player ];
+  return [ player.species[specieID.specieIdx], player ];
 }

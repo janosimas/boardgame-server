@@ -15,8 +15,10 @@ const canBeAttackedBy = (G, ctx, defendingSpecieId, attackerSpecieId) => {
   const [defendingSpecie] = getSpecie(G, ctx, defendingSpecieId);
   return isHungry(G, ctx, defendingSpecie);
 }
+
+Object.defineProperty(traitsBehaviour, name + 'canBeAttackedBy', canBeAttackedBy);
 // register functions in functions map
-traitsBehaviour[name + 'canBeAttackedBy'] = canBeAttackedBy;
+// traitsBehaviour[name + 'canBeAttackedBy'] = canBeAttackedBy;
 
 const BurrowingCards = [];
 BurrowingCards.push(new Burrowing(1));
