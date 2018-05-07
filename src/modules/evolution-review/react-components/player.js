@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Card } from 'boardgame.io/ui';
 
 import SpecieBoard from './specie';
-import Player from '../components/player';
 import { PHASES } from '../components/phases';
 import { SpecieID } from '../components/specieID';
 
@@ -90,7 +89,7 @@ class PlayerBoard extends React.Component {
 }
 
 PlayerBoard.propTypes = {
-  player: PropTypes.instanceOf(Player),
+  player: PropTypes.object,
   moves: PropTypes.object,
   ctx: PropTypes.object,
   G: PropTypes.object

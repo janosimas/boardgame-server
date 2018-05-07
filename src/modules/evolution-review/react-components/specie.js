@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { PHASES } from '../components/phases';
 import { canEat, isCarnivore } from '../components/utils';
-import { getSpecie, SpecieID } from '../components/specieID';
+import { getSpecie } from '../components/specieID';
 
 class SpecieBoard extends React.Component {
   render() {
@@ -83,7 +83,7 @@ SpecieBoard.propTypes = {
   G: PropTypes.object,
   ctx: PropTypes.object,
   player: PropTypes.object,
-  specieID: PropTypes.instanceOf(SpecieID),
+  specieID: PropTypes.object,
   id: PropTypes.number,
   moves: PropTypes.object,
 };

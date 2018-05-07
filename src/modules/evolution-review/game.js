@@ -71,6 +71,7 @@ const Evolution = {
 
       const trait = getCardFromHand(state, ctx, player.selectedCardIndex);
       if(!canAddTrait(state, ctx, specieID, trait)) {
+        player.hand.push(trait);
         return G;
       }
 
