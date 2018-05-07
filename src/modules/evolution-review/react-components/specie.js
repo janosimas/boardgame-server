@@ -2,19 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Specie } from '../components/specie';
 import PHASES from '../components/phases';
+import { canEat, isCarnivore } from '../components/utils';
 
 class SpecieBoard extends React.Component {
   render() {
+    const G = this.props.G;
+    const ctx = this.props.ctx;
+    const moves = this.props.moves;
     const player = this.props.player;
     const specie = this.props.specie;
+    const id = this.props.id;
 
     const traitsRender = [];
     for (const trait of specie.traits) {
       traitsRender.push(<div className='trait' key={trait.name}>{trait.name}</div>);
     }
 
-    const currentPlayer = this.props.ctx.currentPlayer;
-    const phase = this.props.ctx.phase;
+    const currentPlayer = ctx.currentPlayer;
+    const phase = ctx.phase;
 
     let clinOnTrait = undefined;
     let clinOnPopulation = undefined;
@@ -23,9 +28,9 @@ class SpecieBoard extends React.Component {
     if (currentPlayer === player.id) {
       switch (phase) {
         case PHASES.CARD_ACTION_PHASE:
-          clinOnPopulation = () => this.props.moves.increasePopulation(this.props.id);
-          clinOnBodySize = () => this.props.moves.increaseBodySize(this.props.id);
-          clinOnTrait = () => this.props.moves.newTrait(this.props.id);
+          clinOnPopulation = () => moves.increasePopulation(id);
+          clinOnBodySize = () => moves.increaseBodySize(id);
+          clinOnTrait = () => moves.newTrait(id);
           break;
         default:
           break;
@@ -34,21 +39,20 @@ class SpecieBoard extends React.Component {
 
     let clickOnSpecie = undefined;
     if (phase === PHASES.EAT_PHASE) {
-      clickOnSpecie = () => this.props.moves.clickOnSpecie(player.id, this.props.id);
+      clickOnSpecie = () => moves.clickOnSpecie(player.id, id);
     }
 
-    // const specieStyle = specie.isCarnivore() ? { background: '#FFccaa' } : undefined;
-    const specieStyle = undefined;
+    const specieStyle = isCarnivore(G, ctx, specie) ? { background: '#FFccaa' } : undefined;
 
     let specieBoardClass = 'specie-board';
     if (phase === PHASES.EAT_PHASE) {
       if (currentPlayer === player.id) {
-        if (player.selectedSpecie === this.props.id) {
+        if (player.selectedSpecie === id) {
           specieBoardClass += ' highlight-green';
         }
 
         if (player.selectedSpecie === undefined
-          && specie.canEat()) {
+          && canEat(G, ctx, specie)) {
           specieBoardClass += ' highlight-blue';
         }
       }
@@ -76,6 +80,7 @@ class SpecieBoard extends React.Component {
 }
 
 SpecieBoard.propTypes = {
+  G: PropTypes.object,
   ctx: PropTypes.object,
   player: PropTypes.object,
   specie: PropTypes.instanceOf(Specie),

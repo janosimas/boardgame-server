@@ -4,90 +4,13 @@ import Player from './components/player';
 import PHASES from './components/phases';
 import BaseTraits from './components/traits/base_traits';
 import FOOD_TYPE from './components/food_type';
-import { getCardFromHand, eat, canAttack, canBeAttacked, drawCard, getState, currentPlayer } from './components/utils';
+import { getCardFromHand, eat, drawCard, getState, currentPlayer } from './components/utils';
+import { SpecieID } from './components/specieID';
 
 const selectSpecie = (G, ctx, specieIndex) => {
   const state = getState(G, ctx);
   const player = currentPlayer(state, ctx);
-  player.selectedSpecie = specieIndex;
-  return state;
-};
-
-const loosePopulation = (state, ctx, defendingSpecies, defendingSpecieIndex) => {
-  const defendingSpecie = defendingSpecies[defendingSpecieIndex];
-  defendingSpecie.population--;
-
-  if (defendingSpecie.population === 0) {
-    defendingSpecies.splice(defendingSpecieIndex, 1);
-    for (let index = 0; index < defendingSpecies.length; index++) {
-      const specie = defendingSpecies[index];
-      specie.setIndex(index);
-    }
-  }
-};
-
-const triggerPlayerSpecieTrait = (state, ctx, functionName) => {
-  for (const player of state.players) {
-    for (const specie of player.species) {
-      for (const trait of specie.traits) {
-        if (trait[functionName]) {
-          trait[functionName](state, ctx);
-        }
-      }
-    }
-  }
-};
-
-const triggerOnPhaseEndTraits = (state, ctx) => {
-  triggerPlayerSpecieTrait(state, ctx, 'onPhaseEnd');
-};
-
-const triggerOnPhaseBeginTraits = (state, ctx) => {
-  triggerPlayerSpecieTrait(state, ctx, 'onPhaseBegin');
-};
-
-const triggerBeforeAttack = (defendingSpecie, specie, state, ctx) => {
-  for (const trait of defendingSpecie.traits) {
-    if (trait.beforeAttack) {
-      trait.beforeAttack(specie, state, ctx);
-    }
-  }
-};
-
-const attackOtherSpecie = (G, ctx, attackedPlayerIndex, defendingSpecieIndex) => {
-  const state = getState(G, ctx);
-  const player = currentPlayer(state, ctx);
-  if (player.selectedSpecie === undefined) {
-    return G;
-  }
-
-  const specie = player.species[player.selectedSpecie];
-  if (!specie.canEat()
-    || !specie.isCarnivore()
-    || state.foodBank === 0) {
-    return G;
-  }
-
-  const defendingSpecies = state.players[attackedPlayerIndex].species;
-  const defendingSpecie = defendingSpecies[defendingSpecieIndex];
-  if (!canAttack(specie, defendingSpecies[defendingSpecieIndex])) {
-    return G;
-  }
-
-  if (!canBeAttacked(defendingSpecies, defendingSpecieIndex, specie, G)) {
-    return G;
-  }
-
-  triggerBeforeAttack(defendingSpecie, specie, state, ctx);
-
-  loosePopulation(state, ctx, defendingSpecies, defendingSpecieIndex);
-
-  const missingFood = specie.population - specie.food;
-  const food = defendingSpecie.bodySize > missingFood ? missingFood : defendingSpecie.bodySize;
-  eat(player.species, player.selectedSpecie, food, state, 'foodBank', [FOOD_TYPE.MEAT, FOOD_TYPE.ATTACK]);
-
-  player.selectedSpecie = undefined;
-  state.endTurn = true;
+  player.selectedSpecie = new SpecieID(player.id, specieIndex);
   return state;
 };
 

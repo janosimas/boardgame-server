@@ -6,8 +6,8 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import PassNPlay from './react-components/passnplay';
-import Multiplayer from './react-components/multiplayer';
+import PassNPlay from './passnplay-client';
+import Multiplayer from './multiplayer-client';
 
 const routes = [
   {

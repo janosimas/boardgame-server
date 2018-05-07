@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import PlayerBoard from './react-components/player';
+import PlayerBoard from './player';
 
 import './board.css';
-import PHASES from './phases';
-import { currentPlayer } from './utils';
+import PHASES from '../components/phases';
+import { currentPlayer } from '../components/utils';
 
 class EvolutionBoard extends React.Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class EvolutionBoard extends React.Component {
       createNewSpecie: (specieIndex) => {
         this.props.moves.createNewSpecie(specieIndex);
       },
-      onClickEndTurn:() =>{
+      onClickEndTurn: () => {
         this.props.moves.endTurn();
       }
     };

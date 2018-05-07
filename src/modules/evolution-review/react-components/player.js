@@ -9,20 +9,23 @@ import PHASES from '../components/phases';
 
 class PlayerBoard extends React.Component {
   render() {
+    const G = this.props.G;
+    const ctx = this.props.ctx;
+    const moves = this.props.moves;
     const player = this.props.player;
     const species = player.species;
 
-    const currentPlayer = this.props.ctx.currentPlayer;
+    const currentPlayer = ctx.currentPlayer;
     let clickOnCard = undefined;
     let createNewSpecie = undefined;
-    const phase = this.props.ctx.phase;
+    const phase = ctx.phase;
     if (currentPlayer === player.id) {
       switch (phase) {
         case PHASES.CARD_ACTION_PHASE:
-          createNewSpecie = this.props.moves.createNewSpecie;
+          createNewSpecie = moves.createNewSpecie;
         // falls through
         case PHASES.PLAY_FOOD_PHASE:
-          clickOnCard = this.props.moves.clickOnCard;
+          clickOnCard = moves.clickOnCard;
           break;
         default:
           break;
@@ -53,9 +56,10 @@ class PlayerBoard extends React.Component {
 
     const speciesRender = species.map((specie, index) => {
       return <SpecieBoard
-        ctx={this.props.ctx}
+        G={G}
+        ctx={ctx}
         player={player}
-        moves={this.props.moves}
+        moves={moves}
         specie={specie}
         id={index}
         key={index}
@@ -89,6 +93,7 @@ PlayerBoard.propTypes = {
   player: PropTypes.instanceOf(Player),
   moves: PropTypes.object,
   ctx: PropTypes.object,
+  G: PropTypes.object
 };
 
 export default PlayerBoard;
