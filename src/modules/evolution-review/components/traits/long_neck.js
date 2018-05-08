@@ -1,7 +1,7 @@
 import { Trait, TRAIT_TYPE } from './trait';
-import PHASES from '../phases';
+import { PHASES } from '../phases';
 import { eat } from '../utils';
-import FOOD_TYPE from '../food_type';
+import { FOOD_TYPE } from '../food_type';
 import { traitsBehaviour } from './traits_behaviour';
 
 const name = 'Long Neck';

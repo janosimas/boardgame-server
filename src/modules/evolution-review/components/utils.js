@@ -119,7 +119,7 @@ export const canEatPlant = (G, ctx, specieID) => {
 export const isCarnivore = (G, ctx, specieID) => {
   const [specie] = getSpecie(G, ctx, specieID);
   for (const trait of specie.traits) {
-    if (trait.isCarnivore) {
+    if (trait.carnivore) {
       return true;
     }
   }
@@ -255,7 +255,7 @@ const triggerPlayerSpecieTrait = (state, ctx, functionName) => {
     for (const specie of player.species) {
       for (const trait of specie.traits) {
         if (traitsBehaviour.hasOwnProperty(trait.name + functionName)) {
-          traitsBehaviour[trait.name + functionName](state, ctx, specie);
+          traitsBehaviour[trait.name + functionName](state, ctx, specie, trait);
         }
       }
     }

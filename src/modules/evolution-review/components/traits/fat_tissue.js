@@ -1,5 +1,5 @@
 import { Trait, TRAIT_TYPE } from './trait';
-import PHASES from '../phases';
+import { PHASES } from '../phases';
 import { isHungry } from '../utils';
 import { getSpecie } from '../specieID';
 import { traitsBehaviour } from './traits_behaviour';
