@@ -1,5 +1,5 @@
 import { Trait, TRAIT_TYPE } from './trait';
-import { traitsBehaviour } from './base_traits';
+import { traitsBehaviour } from './traits_behaviour';
 
 const name = 'HardShell';
 

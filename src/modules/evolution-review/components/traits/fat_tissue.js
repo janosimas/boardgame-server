@@ -2,7 +2,7 @@ import { Trait, TRAIT_TYPE } from './trait';
 import PHASES from '../phases';
 import { isHungry } from '../utils';
 import { getSpecie } from '../specieID';
-import { traitsBehaviour } from './base_traits';
+import { traitsBehaviour } from './traits_behaviour';
 
 const FatTissueName = 'Fat Tissue';
 

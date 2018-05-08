@@ -1,7 +1,7 @@
 import { Trait, TRAIT_TYPE } from './trait';
 import { getSpecie } from '../specieID';
 import { isHungry } from '../utils';
-import { traitsBehaviour } from './base_traits';
+import { traitsBehaviour } from './traits_behaviour';
 
 const name = 'Burrowing';
 

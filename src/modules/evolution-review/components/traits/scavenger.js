@@ -1,6 +1,6 @@
 import { Trait, TRAIT_TYPE } from './trait';
 import FOOD_TYPE from '../food_type';
-import { traitsBehaviour } from './base_traits';
+import { traitsBehaviour } from './traits_behaviour';
 
 const name = 'Scavenger';
 
