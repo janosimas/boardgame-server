@@ -34,9 +34,16 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.js?$/,
+        loader: 'babel-loader?presets=es2015&retainLines=true',
+        query: {
+          presets: ['react', 'es2015', 'stage-0'],
+        },
+      },
+      {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
+        loader: 'babel-loader?presets=es2015&retainLines=true',
         query: {
           presets: ['react', 'es2015', 'stage-0'],
         },

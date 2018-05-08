@@ -1,7 +1,7 @@
 import { getSpecie, SpecieID } from './specieID';
 import { FOOD_TYPE } from './food_type';
 import { specieEat } from './specie';
-import { traitsBehaviour } from './traits/base_traits';
+import { traitsBehaviour } from './traits/traits_behaviour';
 
 export const currentPlayer = (G, ctx) => {
   return G.players[ctx.currentPlayer];
@@ -90,9 +90,10 @@ export const canEat = (G, ctx, specieID) => {
     return true;
   }
 
-  for (const trait of this.traits) {
+  const [specie] = getSpecie(G, ctx, specieID);
+  for (const trait of specie.traits) {
     if (traitsBehaviour.hasOwnProperty(trait.name + 'canEat')) {
-      if (trait.canEat(G, ctx, specieID, trait)) {
+      if (traitsBehaviour[trait.name + 'canEat'](G, ctx, specieID, trait)) {
         return true;
       }
     }
