@@ -1,5 +1,5 @@
 import { Trait, TRAIT_TYPE } from './trait';
-import { getSpecie } from '../specieID';
+import { getSpecie, SpecieID } from '../specieID';
 import { traitsBehaviour } from './traits_behaviour';
 
 const name = 'Symbiosis';
@@ -12,8 +12,8 @@ class Symbiosis extends Trait {
 
 const canBeAttackedBy = (G, ctx, defendingSpecieId, attackerSpecieId) => {
   const [defendingSpecie, player] = getSpecie(G, ctx, defendingSpecieId);
-  if ((player.species.length) > defendingSpecieId + 1) {
-    const specieToTheRight = player.species(defendingSpecieId + 1);
+  if ((player.species.length) > defendingSpecieId.specieIdx + 1) {
+    const [specieToTheRight] = getSpecie(G, ctx, new SpecieID(defendingSpecieId.playerID, defendingSpecieId.specieIdx + 1));
     if (this.bodySize < specieToTheRight.bodySize) {
       return false;
     }

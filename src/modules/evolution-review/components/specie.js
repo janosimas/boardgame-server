@@ -1,4 +1,4 @@
-import { traitsBehaviour } from "./traits/base_traits";
+import { traitsBehaviour } from "./traits/traits_behaviour";
 import { getSpecie } from "./specieID";
 
 export class Specie {

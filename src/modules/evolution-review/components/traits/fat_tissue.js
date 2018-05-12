@@ -32,7 +32,7 @@ const storeFood = (G, ctx, specieID, trait, food) => {
     trait.storedFood = specie.bodySize;
   }
 
-  trait.name = FatTissueName + ' (' + trait.storedFood + ')';
+  trait.exibitName = FatTissueName + ' (' + trait.storedFood + ')';
 }
 
 // register functions in functions map

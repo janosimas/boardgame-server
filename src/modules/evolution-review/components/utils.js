@@ -176,7 +176,7 @@ const canBeAttacked = (G, ctx, attackerSpecieId, defendingSpecieId) => {
 
 
   if (defendingSpecieId.specieIdx > 0) {
-    const leftDefendingSpecie = getSpecie(G, ctx, new SpecieID(defendingSpecieId.playerID, defendingSpecieId.specieIdx - 1));
+    const [leftDefendingSpecie] = getSpecie(G, ctx, new SpecieID(defendingSpecieId.playerID, defendingSpecieId.specieIdx - 1));
     for (const trait of leftDefendingSpecie.traits) {
       if (traitsBehaviour.hasOwnProperty(trait.name + 'canBeAttackedByLeft')) {
         if (!traitsBehaviour[trait.name + 'canBeAttackedByLeft'](G, ctx, defendingSpecieId, attackerSpecieId)) {
@@ -187,7 +187,7 @@ const canBeAttacked = (G, ctx, attackerSpecieId, defendingSpecieId) => {
   }
 
   if (defendingSpecieId.specieIdx + 1 < player.species.length) {
-    const rightDefendingSpecie = getSpecie(G, ctx, new SpecieID(defendingSpecieId.playerID, defendingSpecieId.specieIdx + 1));
+    const [rightDefendingSpecie] = getSpecie(G, ctx, new SpecieID(defendingSpecieId.playerID, defendingSpecieId.specieIdx + 1));
     for (const trait of rightDefendingSpecie.traits) {
       if (traitsBehaviour.hasOwnProperty(trait.name + 'canBeAttackedByLeft')) {
         if (!traitsBehaviour[trait.name + 'canBeAttackedByLeft'](G, ctx, defendingSpecieId, attackerSpecieId)) {
@@ -287,7 +287,7 @@ export const attackOtherSpecie = (state, ctx, defendingSpecieID) => {
 
   const [specie] = getSpecie(state, ctx, player.selectedSpecie);
   if (!canEat(state, ctx, player.selectedSpecie)
-    || !specie.isCarnivore()
+    || !isCarnivore(state, ctx, player.selectedSpecie)
     || state.foodBank === 0) {
     return state;
   }

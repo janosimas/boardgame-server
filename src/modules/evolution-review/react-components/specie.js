@@ -15,7 +15,7 @@ class SpecieBoard extends React.Component {
 
     const traitsRender = [];
     for (const trait of specie.traits) {
-      traitsRender.push(<div className='trait' key={trait.name}>{trait.name}</div>);
+      traitsRender.push(<div className='trait' key={trait.name}>{trait.exibitName}</div>);
     }
 
     const currentPlayer = ctx.currentPlayer;
@@ -47,7 +47,8 @@ class SpecieBoard extends React.Component {
     let specieBoardClass = 'specie-board';
     if (phase === PHASES.EAT_PHASE) {
       if (currentPlayer === player.id) {
-        if (player.selectedSpecie === specieID) {
+        if (player.selectedSpecie.playerID === specieID.playerID
+          && player.selectedSpecie.specieIdx === specieID.specieIdx) {
           specieBoardClass += ' highlight-green';
         }
 

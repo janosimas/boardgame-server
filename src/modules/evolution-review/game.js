@@ -44,6 +44,9 @@ const Evolution = {
       const state = getState(G, ctx);
       const card = getCardFromHand(state, ctx, index);
       if (!card) {
+        // client feedback
+        const player = currentPlayer(state, ctx);
+        player.hand.push(card);
         return G;
       }
 
@@ -140,7 +143,8 @@ const Evolution = {
         }
 
         // deselect specie
-        if (player.selectedSpecie === specieID) {
+        if (player.selectedSpecie.playerID === specieID.playerID
+          && player.selectedSpecie.specieIdx === specieID.specieIdx) {
           player.selectedSpecie = undefined;
           return state;
         }

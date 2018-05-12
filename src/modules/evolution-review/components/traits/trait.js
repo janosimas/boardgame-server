@@ -6,6 +6,7 @@ export class Trait {
     this.types = types;
     this.className = 'trait';
     this.text = text;
+    this.exibitName = name;
   }
 }
 
