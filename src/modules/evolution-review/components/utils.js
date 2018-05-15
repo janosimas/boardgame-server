@@ -11,7 +11,7 @@ export const getState = (G) => {
   return Object.assign({}, G);
 };
 
-export const eat = (state, ctx, specieID, food, source, types, triggerEffects) => {
+export const eat = (state, ctx, specieID, food, source, types, triggerEffects = true) => {
   if (state[source] < food) {
     food = state[source];
   }
