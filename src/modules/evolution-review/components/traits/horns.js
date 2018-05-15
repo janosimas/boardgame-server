@@ -1,6 +1,7 @@
 import { Trait, TRAIT_TYPE } from './trait';
 import { getSpecie } from '../specieID';
 import { traitsBehaviour } from './traits_behaviour';
+import { loosePopulation } from '../utils';
 
 const name = 'Horns';
 
@@ -11,8 +12,7 @@ class Horns extends Trait {
 }
 
 const beforeAttack = (state, ctx, attackerSpecieId, defendingSpecieId) => {
-  const [attackerSpecie] = getSpecie(state, ctx, attackerSpecieId);
-  attackerSpecie.population--;
+  loosePopulation(state, ctx, attackerSpecieId);
 }
 
 // register functions in functions map
