@@ -27,6 +27,7 @@ const Evolution = {
     }
 
     G.secret.traitsDeck = ctx.random.Shuffle(BaseTraits);
+    G.selectedCards = [];
 
     return G;
   },
@@ -42,15 +43,15 @@ const Evolution = {
     // play card for food phase
     clickOnCardForFood: (G, ctx, index) => {
       const state = getState(G, ctx);
+      const player = currentPlayer(state, ctx);
       const card = getCardFromHand(state, ctx, index);
       if (!card) {
         // client feedback
-        const player = currentPlayer(state, ctx);
         player.hand.push(card);
         return G;
       }
 
-      state.secret.selectedCards.push(card);
+      state.selectedCards.push(card);
       state.endTurn = true;
 
       return state;
@@ -135,7 +136,7 @@ const Evolution = {
       const state = getState(G, ctx);
       const player = currentPlayer(state, ctx);
       const clickedPlayer = getPlayer(state, ctx, specieID);
-      if (clickedPlayer.id === player.id) {
+      if (clickedPlayer.id === player.id && canEat(G, ctx, specieID)) {
         // select specie
         if (player.selectedSpecie === undefined) {
           player.selectedSpecie = specieID;
@@ -150,6 +151,7 @@ const Evolution = {
         }
 
         // change selection (not carnivore)
+        // TODO: allow attacking own species
         if (clickedPlayer.id === player.id && !isCarnivore(state, ctx, specieID)) {
           player.selectedSpecie = specieID;
           return state;
@@ -201,15 +203,18 @@ const Evolution = {
           return state;
         },
         endPhaseIf: (G, ctx) => {
-          if (G.secret.selectedCards && G.secret.selectedCards.length === G.players.length) {
+          if (G.selectedCards.length === G.players.length) {
             return PHASES.CARD_ACTION_PHASE;
-          } else {
+          } else if (G.selectedCards.length === G.players.length) {
+            throw Error("Mais cartas que jogadores?!?!");
+          }
+          else {
             return false;
           }
         },
         onPhaseBegin: (G, ctx) => {
           const state = getState(G, ctx);
-          state.secret.selectedCards = [];
+          state.selectedCards = [];
           for (const player of state.players) {
             drawCard(state, ctx, player.id, 4 + player.species.length);
           }
@@ -219,8 +224,9 @@ const Evolution = {
         },
         onPhaseEnd: (G, ctx) => {
           const state = getState(G, ctx);
+          const selectedCards = state.selectedCards;
           let food = 0;
-          for (const card of state.secret.selectedCards) {
+          for (const card of selectedCards) {
             food += card.food;
           }
 
@@ -237,7 +243,7 @@ const Evolution = {
             state.wateringHole = 0;
           }
 
-          state.secret.selectedCards = undefined;
+          state.selectedCards = [];
 
           triggerOnPhaseEndTraits(state, ctx);
           return state;
