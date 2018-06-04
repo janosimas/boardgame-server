@@ -44,6 +44,11 @@ const Evolution = {
     clickOnCardForFood: (G, ctx, index) => {
       const state = getState(G, ctx);
       const player = currentPlayer(state, ctx);
+
+      if(G.selectedCards.length === G.players.length) {
+        return G;
+      }
+
       const card = getCardFromHand(state, ctx, index);
       if (!card) {
         // client feedback
@@ -205,10 +210,7 @@ const Evolution = {
         endPhaseIf: (G, ctx) => {
           if (G.selectedCards.length === G.players.length) {
             return PHASES.CARD_ACTION_PHASE;
-          } else if (G.selectedCards.length === G.players.length) {
-            throw Error("Mais cartas que jogadores?!?!");
-          }
-          else {
+          } else {
             return false;
           }
         },
