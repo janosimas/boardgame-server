@@ -255,7 +255,7 @@ const triggerPlayerSpecieTrait = (state, ctx, functionName) => {
     for (const specie of player.species) {
       for (const trait of specie.traits) {
         if (traitsBehaviour.hasOwnProperty(trait.name + functionName)) {
-          traitsBehaviour[trait.name + functionName](state, ctx, specie, trait);
+          traitsBehaviour[trait.name + functionName](state, ctx, new SpecieID(player.species.indexOf(specie), state.players.indexOf(player)), trait);
         }
       }
     }
