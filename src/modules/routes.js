@@ -7,8 +7,8 @@
  */
 
 import tic_tac_toe from './tic-tac-toe';
-import evolution from './evolution-review'
-
+import evolution from './evolution-review';
+import synctest from './synctest';
 
 const routes = [
   {
@@ -18,6 +18,10 @@ const routes = [
   {
     name: 'Evolution',
     routes: evolution.routes,
+  },
+  {
+    name: 'SyncTest',
+    routes: synctest.routes,
   }
 ];
 

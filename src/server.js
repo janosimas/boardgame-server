@@ -14,12 +14,13 @@ import WebpackConfig from './webpack.dev.js';
 import { Server } from 'boardgame.io/server';
 import TicTacToe from './modules/tic-tac-toe/game';
 import Evolution from './modules/evolution-review/game';
+import Synctest from './modules/synctest/game';
 
 const PORT = process.env.PORT || 8000;
 const DEV = process.env.NODE_ENV === 'development';
 const PROD = !DEV;
 
-const server = Server({ games: [TicTacToe, Evolution] });
+const server = Server({ games: [TicTacToe, Evolution, Synctest] });
 
 if (DEV) {
   server.app.use(
