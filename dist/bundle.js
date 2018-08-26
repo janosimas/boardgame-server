@@ -62,7 +62,7 @@
 /******/ 	}
 /******/
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "bc58838418ef34a924c1"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ff65ba879d471baf3da5"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -37829,7 +37829,15 @@ var SpecieID = exports.SpecieID = function SpecieID(playerID, specieIdx) {
 };
 
 var getPlayer = exports.getPlayer = function getPlayer(G, ctx, specieID) {
-  return G.players[specieID.playerID];
+  if (!specieID) {
+    throw Error('Undefined specie.');
+  }
+  var player = G.players[specieID.playerID];
+  if (!player) {
+    throw Error('Undefined player: ' + specieID.playerID);
+  }
+
+  return player;
 };
 
 var getSpecie = exports.getSpecie = function getSpecie(G, ctx, specieID) {
@@ -38768,15 +38776,9 @@ var _trait = __webpack_require__(/*! ./trait */ "./src/modules/evolution-review/
 
 var _food_type = __webpack_require__(/*! ../food_type */ "./src/modules/evolution-review/components/food_type.js");
 
-var _food_type2 = _interopRequireDefault(_food_type);
-
 var _utils = __webpack_require__(/*! ../utils */ "./src/modules/evolution-review/components/utils.js");
 
 var _traits_behaviour = __webpack_require__(/*! ./traits_behaviour */ "./src/modules/evolution-review/components/traits/traits_behaviour.js");
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
-}
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -38811,7 +38813,7 @@ var Foraging = function (_Trait) {
 }(_trait.Trait);
 
 var specieGotFood = function specieGotFood(state, ctx, specieID, source, types) {
-  if (types.includes(_food_type2.default.PLANT)) {
+  if (types.includes(_food_type.FOOD_TYPE.PLANT)) {
     var food = 1;
     (0, _utils.eat)(state, ctx, specieID, food, source, types, false);
   }
@@ -38921,37 +38923,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _slicedToArray = function () {
-  function sliceIterator(arr, i) {
-    var _arr = [];var _n = true;var _d = false;var _e = undefined;try {
-      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-        _arr.push(_s.value);if (i && _arr.length === i) break;
-      }
-    } catch (err) {
-      _d = true;_e = err;
-    } finally {
-      try {
-        if (!_n && _i["return"]) _i["return"]();
-      } finally {
-        if (_d) throw _e;
-      }
-    }return _arr;
-  }return function (arr, i) {
-    if (Array.isArray(arr)) {
-      return arr;
-    } else if (Symbol.iterator in Object(arr)) {
-      return sliceIterator(arr, i);
-    } else {
-      throw new TypeError("Invalid attempt to destructure non-iterable instance");
-    }
-  };
-}();
-
 var _trait = __webpack_require__(/*! ./trait */ "./src/modules/evolution-review/components/traits/trait.js");
 
 var _specieID = __webpack_require__(/*! ../specieID */ "./src/modules/evolution-review/components/specieID.js");
 
 var _traits_behaviour = __webpack_require__(/*! ./traits_behaviour */ "./src/modules/evolution-review/components/traits/traits_behaviour.js");
+
+var _utils = __webpack_require__(/*! ../utils */ "./src/modules/evolution-review/components/utils.js");
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -38962,12 +38940,12 @@ function _classCallCheck(instance, Constructor) {
 function _possibleConstructorReturn(self, call) {
   if (!self) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }return call && ((typeof call === "undefined" ? "undefined" : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+  }return call && ((typeof call === 'undefined' ? 'undefined' : _typeof(call)) === "object" || typeof call === "function") ? call : self;
 }
 
 function _inherits(subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === "undefined" ? "undefined" : _typeof(superClass)));
+    throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
   }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 }
 
@@ -38986,11 +38964,7 @@ var Horns = function (_Trait) {
 }(_trait.Trait);
 
 var beforeAttack = function beforeAttack(state, ctx, attackerSpecieId, defendingSpecieId) {
-  var _getSpecie = (0, _specieID.getSpecie)(state, ctx, attackerSpecieId),
-      _getSpecie2 = _slicedToArray(_getSpecie, 1),
-      attackerSpecie = _getSpecie2[0];
-
-  attackerSpecie.population--;
+  (0, _utils.loosePopulation)(state, ctx, attackerSpecieId);
 };
 
 // register functions in functions map
@@ -39498,7 +39472,9 @@ var getState = exports.getState = function getState(G) {
   return Object.assign({}, G);
 };
 
-var eat = exports.eat = function eat(state, ctx, specieID, food, source, types, triggerEffects) {
+var eat = exports.eat = function eat(state, ctx, specieID, food, source, types) {
+  var triggerEffects = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : true;
+
   if (state[source] < food) {
     food = state[source];
   }
@@ -40062,7 +40038,7 @@ var triggerPlayerSpecieTrait = function triggerPlayerSpecieTrait(state, ctx, fun
               var trait = _step15.value;
 
               if (_traits_behaviour.traitsBehaviour.hasOwnProperty(trait.name + functionName)) {
-                _traits_behaviour.traitsBehaviour[trait.name + functionName](state, ctx, specie, trait);
+                _traits_behaviour.traitsBehaviour[trait.name + functionName](state, ctx, new _specieID.SpecieID(player.id, player.species.indexOf(specie)), trait);
               }
             }
           } catch (err) {
@@ -40282,6 +40258,7 @@ var Evolution = {
     }
 
     G.secret.traitsDeck = ctx.random.Shuffle(_base_traits.BaseTraits);
+    G.selectedCards = [];
 
     return G;
   },
@@ -40297,12 +40274,20 @@ var Evolution = {
     // play card for food phase
     clickOnCardForFood: function clickOnCardForFood(G, ctx, index) {
       var state = (0, _utils.getState)(G, ctx);
-      var card = (0, _utils.getCardFromHand)(state, ctx, index);
-      if (!card) {
+      var player = (0, _utils.currentPlayer)(state, ctx);
+
+      if (G.selectedCards.length === G.players.length) {
         return G;
       }
 
-      state.secret.selectedCards.push(card);
+      var card = (0, _utils.getCardFromHand)(state, ctx, index);
+      if (!card) {
+        // client feedback
+        player.hand.push(card);
+        return G;
+      }
+
+      state.selectedCards.push(card);
       state.endTurn = true;
 
       return state;
@@ -40398,7 +40383,7 @@ var Evolution = {
       var state = (0, _utils.getState)(G, ctx);
       var player = (0, _utils.currentPlayer)(state, ctx);
       var clickedPlayer = (0, _specieID.getPlayer)(state, ctx, specieID);
-      if (clickedPlayer.id === player.id) {
+      if (clickedPlayer.id === player.id && (0, _utils.canEat)(G, ctx, specieID)) {
         // select specie
         if (player.selectedSpecie === undefined) {
           player.selectedSpecie = specieID;
@@ -40412,6 +40397,7 @@ var Evolution = {
         }
 
         // change selection (not carnivore)
+        // TODO: allow attacking own species
         if (clickedPlayer.id === player.id && !(0, _utils.isCarnivore)(state, ctx, specieID)) {
           player.selectedSpecie = specieID;
           return state;
@@ -40460,7 +40446,7 @@ var Evolution = {
         return state;
       },
       endPhaseIf: function endPhaseIf(G, ctx) {
-        if (G.secret.selectedCards && G.secret.selectedCards.length === G.players.length) {
+        if (G.selectedCards.length === G.players.length) {
           return _phases.PHASES.CARD_ACTION_PHASE;
         } else {
           return false;
@@ -40468,7 +40454,7 @@ var Evolution = {
       },
       onPhaseBegin: function onPhaseBegin(G, ctx) {
         var state = (0, _utils.getState)(G, ctx);
-        state.secret.selectedCards = [];
+        state.selectedCards = [];
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
@@ -40499,13 +40485,14 @@ var Evolution = {
       },
       onPhaseEnd: function onPhaseEnd(G, ctx) {
         var state = (0, _utils.getState)(G, ctx);
+        var selectedCards = state.selectedCards;
         var food = 0;
         var _iteratorNormalCompletion2 = true;
         var _didIteratorError2 = false;
         var _iteratorError2 = undefined;
 
         try {
-          for (var _iterator2 = state.secret.selectedCards[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          for (var _iterator2 = selectedCards[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
             var card = _step2.value;
 
             food += card.food;
@@ -40538,7 +40525,7 @@ var Evolution = {
           state.wateringHole = 0;
         }
 
-        state.secret.selectedCards = undefined;
+        state.selectedCards = [];
 
         (0, _utils.triggerOnPhaseEndTraits)(state, ctx);
         return state;

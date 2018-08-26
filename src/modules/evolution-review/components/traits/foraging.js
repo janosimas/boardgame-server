@@ -1,5 +1,5 @@
 import { Trait, TRAIT_TYPE } from './trait';
-import FOOD_TYPES from '../food_type';
+import { FOOD_TYPE } from '../food_type';
 import { eat } from '../utils';
 import { traitsBehaviour } from './traits_behaviour';
 
@@ -12,7 +12,7 @@ class Foraging extends Trait {
 }
 
 const specieGotFood = (state, ctx, specieID, source, types) => {
-  if (types.includes(FOOD_TYPES.PLANT)) {
+  if (types.includes(FOOD_TYPE.PLANT)) {
     let food = 1;
     eat(state, ctx, specieID, food, source, types, false);
   }

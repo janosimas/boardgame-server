@@ -6,7 +6,15 @@ export class SpecieID {
 }
 
 export const getPlayer = (G, ctx, specieID) => {
-  return G.players[specieID.playerID];
+  if(!specieID) {
+    throw Error('Undefined specie.');
+  }
+  const player =  G.players[specieID.playerID];
+  if(!player) {
+    throw Error('Undefined player: ' + specieID.playerID);
+  }
+
+  return player;
 }
 
 export const getSpecie = (G, ctx, specieID) => {
