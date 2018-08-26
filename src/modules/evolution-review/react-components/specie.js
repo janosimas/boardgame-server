@@ -47,8 +47,9 @@ class SpecieBoard extends React.Component {
     let specieBoardClass = 'specie-board';
     if (phase === PHASES.EAT_PHASE) {
       if (currentPlayer === player.id) {
-        if (player.selectedSpecie.playerID === specieID.playerID
-          && player.selectedSpecie.specieIdx === specieID.specieIdx) {
+        if (player.selectedSpecie
+            && (player.selectedSpecie.playerID === specieID.playerID
+                && player.selectedSpecie.specieIdx === specieID.specieIdx)) {
           specieBoardClass += ' highlight-green';
         }
 

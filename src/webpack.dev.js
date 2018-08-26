@@ -16,10 +16,11 @@ const port = process.env.PORT || 8000;
 module.exports = {
   mode: 'development',
   entry: ['webpack-hot-middleware/client', path.resolve(__dirname, 'index.js')],
-  devtool: 'eval-source-map',
+  devtool: 'source-map',
   output: {
     publicPath: '/',
     filename: 'bundle.js',
+    sourceMapFilename: 'bundle.js.map',
     path: path.resolve(__dirname, '../dist'),
   },
 
