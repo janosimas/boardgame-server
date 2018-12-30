@@ -2,28 +2,28 @@ import { GEM } from './gemTypes';
 
 const black = {
   tier1: [
-    {bonus: GEM.BLACK, points: 0, black: 0, white: 1, red: 1, blue: 1, green: 1},
-    {bonus: GEM.BLACK, points: 0, black: 0, white: 0, red: 1, blue: 0, green: 2},
-    {bonus: GEM.BLACK, points: 0, black: 0, white: 2, red: 0, blue: 0, green: 2},
-    {bonus: GEM.BLACK, points: 0, black: 1, white: 0, red: 3, blue: 0, green: 1},
-    {bonus: GEM.BLACK, points: 0, black: 0, white: 0, red: 0, blue: 0, green: 3},
-    {bonus: GEM.BLACK, points: 0, black: 0, white: 1, red: 1, blue: 2, green: 1},
-    {bonus: GEM.BLACK, points: 0, black: 0, white: 2, red: 1, blue: 2, green: 0},
-    {bonus: GEM.BLACK, points: 1, black: 0, white: 0, red: 0, blue: 4, green: 0},
+    {bonus: GEM.BLACK, points: 0, [GEM.BLACK]: 0, [GEM.WHITE]: 1, [GEM.RED]: 1, [GEM.BLUE]: 1, [GEM.GREEN]: 1},
+    {bonus: GEM.BLACK, points: 0, [GEM.BLACK]: 0, [GEM.WHITE]: 0, [GEM.RED]: 1, [GEM.BLUE]: 0, [GEM.GREEN]: 2},
+    {bonus: GEM.BLACK, points: 0, [GEM.BLACK]: 0, [GEM.WHITE]: 2, [GEM.RED]: 0, [GEM.BLUE]: 0, [GEM.GREEN]: 2},
+    {bonus: GEM.BLACK, points: 0, [GEM.BLACK]: 1, [GEM.WHITE]: 0, [GEM.RED]: 3, [GEM.BLUE]: 0, [GEM.GREEN]: 1},
+    {bonus: GEM.BLACK, points: 0, [GEM.BLACK]: 0, [GEM.WHITE]: 0, [GEM.RED]: 0, [GEM.BLUE]: 0, [GEM.GREEN]: 3},
+    {bonus: GEM.BLACK, points: 0, [GEM.BLACK]: 0, [GEM.WHITE]: 1, [GEM.RED]: 1, [GEM.BLUE]: 2, [GEM.GREEN]: 1},
+    {bonus: GEM.BLACK, points: 0, [GEM.BLACK]: 0, [GEM.WHITE]: 2, [GEM.RED]: 1, [GEM.BLUE]: 2, [GEM.GREEN]: 0},
+    {bonus: GEM.BLACK, points: 1, [GEM.BLACK]: 0, [GEM.WHITE]: 0, [GEM.RED]: 0, [GEM.BLUE]: 4, [GEM.GREEN]: 0},
   ],
   tier2: [
-    {bonus: GEM.BLACK, points: 1, black: 0, white: 3, red: 0, blue: 2, green: 2},
-    {bonus: GEM.BLACK, points: 1, black: 2, white: 3, red: 0, blue: 0, green: 3},
-    {bonus: GEM.BLACK, points: 2, black: 0, white: 0, red: 2, blue: 1, green: 4},
-    {bonus: GEM.BLACK, points: 2, black: 0, white: 5, red: 0, blue: 0, green: 0},
-    {bonus: GEM.BLACK, points: 2, black: 0, white: 0, red: 3, blue: 0, green: 5},
-    {bonus: GEM.BLACK, points: 3, black: 6, white: 0, red: 0, blue: 0, green: 0},
+    {bonus: GEM.BLACK, points: 1, [GEM.BLACK]: 0, [GEM.WHITE]: 3, [GEM.RED]: 0, [GEM.BLUE]: 2, [GEM.GREEN]: 2},
+    {bonus: GEM.BLACK, points: 1, [GEM.BLACK]: 2, [GEM.WHITE]: 3, [GEM.RED]: 0, [GEM.BLUE]: 0, [GEM.GREEN]: 3},
+    {bonus: GEM.BLACK, points: 2, [GEM.BLACK]: 0, [GEM.WHITE]: 0, [GEM.RED]: 2, [GEM.BLUE]: 1, [GEM.GREEN]: 4},
+    {bonus: GEM.BLACK, points: 2, [GEM.BLACK]: 0, [GEM.WHITE]: 5, [GEM.RED]: 0, [GEM.BLUE]: 0, [GEM.GREEN]: 0},
+    {bonus: GEM.BLACK, points: 2, [GEM.BLACK]: 0, [GEM.WHITE]: 0, [GEM.RED]: 3, [GEM.BLUE]: 0, [GEM.GREEN]: 5},
+    {bonus: GEM.BLACK, points: 3, [GEM.BLACK]: 6, [GEM.WHITE]: 0, [GEM.RED]: 0, [GEM.BLUE]: 0, [GEM.GREEN]: 0},
   ],
   tier3: [
-    {bonus: GEM.BLACK, points: 3, black: 0, white: 3, red: 3, blue: 3, green: 5},
-    {bonus: GEM.BLACK, points: 4, black: 0, white: 0, red: 7, blue: 0, green: 0},
-    {bonus: GEM.BLACK, points: 4, black: 3, white: 0, red: 6, blue: 0, green: 3},
-    {bonus: GEM.BLACK, points: 5, black: 3, white: 0, red: 7, blue: 0, green: 0},
+    {bonus: GEM.BLACK, points: 3, [GEM.BLACK]: 0, [GEM.WHITE]: 3, [GEM.RED]: 3, [GEM.BLUE]: 3, [GEM.GREEN]: 5},
+    {bonus: GEM.BLACK, points: 4, [GEM.BLACK]: 0, [GEM.WHITE]: 0, [GEM.RED]: 7, [GEM.BLUE]: 0, [GEM.GREEN]: 0},
+    {bonus: GEM.BLACK, points: 4, [GEM.BLACK]: 3, [GEM.WHITE]: 0, [GEM.RED]: 6, [GEM.BLUE]: 0, [GEM.GREEN]: 3},
+    {bonus: GEM.BLACK, points: 5, [GEM.BLACK]: 3, [GEM.WHITE]: 0, [GEM.RED]: 7, [GEM.BLUE]: 0, [GEM.GREEN]: 0},
   ]
 };
 
