@@ -7,12 +7,17 @@
  */
 
 import tic_tac_toe from './tic-tac-toe';
+import splendor from './splendor';
 
 
 const routes = [
   {
     name: 'Tic-Tac-Toe',
     routes: tic_tac_toe.routes,
+  },
+  {
+    name: 'Splendor',
+    routes: splendor.routes,
   }
 ];
 
