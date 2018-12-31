@@ -25,7 +25,14 @@ const Splendor = Game({
     }
 
     let G = {
-      gems: {},
+      gems: {
+        [GEM.RED]: numOfGems,
+        [GEM.GREEN]: numOfGems,
+        [GEM.BLUE]: numOfGems,
+        [GEM.WHITE]: numOfGems,
+        [GEM.BLACK]: numOfGems,
+        [GEM.YELLOW]: 5, // allways 5 golden tokens
+      },
       decks: {
         tier1: ctx.random.Shuffle(tier1),
         tier2: ctx.random.Shuffle(tier2),
@@ -41,18 +48,25 @@ const Splendor = Game({
 
     for (let index = 0; index < ctx.numPlayers; index++) {
       G.players.push({
-        gems: {},
-        cards: {},
+        gems: {
+          [GEM.RED]: 0,
+          [GEM.GREEN]: 0,
+          [GEM.BLUE]: 0,
+          [GEM.WHITE]: 0,
+          [GEM.BLACK]: 0,
+          [GEM.YELLOW]: 0,
+        },
+        cards: {
+          [GEM.RED]: [],
+          [GEM.GREEN]: [],
+          [GEM.BLUE]: [],
+          [GEM.WHITE]: [],
+          [GEM.BLACK]: [],
+          [GEM.YELLOW]: [],
+        },
         reserved: []
       });
     }
-
-    G.gems[GEM.RED] = numOfGems;
-    G.gems[GEM.GREEN] = numOfGems;
-    G.gems[GEM.BLUE] = numOfGems;
-    G.gems[GEM.WHITE] = numOfGems;
-    G.gems[GEM.BLACK] = numOfGems;
-    G.gems[GEM.YELLOW] = 5; // allways 5 golden tokens
 
     dealCards(G);
 
