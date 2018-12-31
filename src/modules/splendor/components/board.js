@@ -11,6 +11,8 @@ import PropTypes from 'prop-types';
 import './board.css';
 
 import { GEM, YELLOW } from '../components/gemTypes';
+import { RenderGem } from '../react-components/gem';
+import { uniq } from 'ramda';
 
 class Board extends React.Component {
   static propTypes = {
@@ -38,6 +40,12 @@ class Board extends React.Component {
           return
         }
         const gemsOnHold = [...this.state.gemsOnHold, gem];
+        this.setState({ ...this.state, gemsOnHold })
+      },
+
+      removeFromHold: (index) => {
+        const gemsOnHold = this.state.gemsOnHold;
+        gemsOnHold.splice(index, 1);
         this.setState({ ...this.state, gemsOnHold })
       }
     }
@@ -90,13 +98,27 @@ class Board extends React.Component {
     </div>);
   }
 
+  renderHold() {
+    const gemsOnHold = this.state.gemsOnHold;
+    let okButton = null;
+    if (uniq(gemsOnHold).length === 3
+      || (gemsOnHold.length === 2 && gemsOnHold[0] === gemsOnHold[1])) {
+      okButton = <button>{"ok"}</button>;
+    }
+
+    return <div style={{ display: "flex" }}>
+      {this.state.gemsOnHold.map((gem, i) => <div key={i} onClick={() => this.moves.removeFromHold(i)} >{RenderGem[gem]}</div>)}
+      {okButton}
+    </div>
+  }
+
   render() {
     const G = this.props.G;
     const ctx = this.props.ctx;
 
     return (
       <div>
-        <div>{"on hold: " + this.state.gemsOnHold.map(gem => gem + " ")}</div>
+        <div>{this.renderHold()}</div>
         <div>{this.renderTokens(G)}</div>
         <div>{this.renderCards(G)}</div>
         <div>{this.renderPlayer(G.players[ctx.currentPlayer])}</div>
