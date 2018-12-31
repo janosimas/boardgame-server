@@ -36,8 +36,16 @@ const Splendor = Game({
         tier2: [],
         tier3: [],
       },
-      players: {}
+      players: []
     };
+
+    for (let index = 0; index < ctx.numPlayers; index++) {
+      G.players.push({
+        gems: {},
+        cards: {},
+        reserved: []
+      });
+    }
 
     G.gems[GEM.RED] = numOfGems;
     G.gems[GEM.GREEN] = numOfGems;
@@ -134,8 +142,28 @@ const Splendor = Game({
     },
 
     reserveCard(G, ctx, tier, pos) {
+      //cancel action if no tier or position
+      if (isNil(tier)
+        || isNil(pos)
+        || pos < 0
+        || pos > 3) {
+        return G;
+      }
 
-      return { ...G };
+      const Gcopy = { ...G };
+      const player = Gcopy.players[ctx.currentPlayer];
+      // check if can reserve
+      if (Gcopy.gems[GEM.YELLOW] === 0
+        || player.reserved.length === 3) {
+        return G;
+      }
+
+      const card = Gcopy.cards[tier][pos];
+      player.reserved.push(card);
+      player.gems[GEM.YELLOW] += 1;
+      Gcopy.gems[GEM.YELLOW] -= 1;
+
+      return Gcopy;
     }
   },
 
