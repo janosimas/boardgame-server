@@ -1,4 +1,4 @@
-import { GEM } from "./gemTypes";
+import { GEM, YELLOW } from "./gemTypes";
 
 const dealFromDeck = (G, deck) => {
   while (G.cards[deck].length < 4) {
@@ -30,12 +30,8 @@ const reduceColor = (player, card, color) => {
 export const canBuy = (player, card) => {
   let accum = 0;
   for (const key in GEM) {
-    if (key === "YELLOW") {
-      continue;
-    }
-
     accum += reduceColor(player, card, GEM[key]);
   }
 
-  return accum <= player.gems[GEM.YELLOW];
+  return accum <= player.gems[YELLOW];
 }

@@ -4,5 +4,6 @@ export const GEM = {
   BLUE: "blue",
   WHITE: "white",
   BLACK: "black",
-  YELLOW: "yellow"
 }
+
+export const YELLOW = "yellow";

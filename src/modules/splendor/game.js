@@ -7,7 +7,7 @@
  */
 
 import { Game } from 'boardgame.io/core';
-import { GEM } from './components/gemTypes';
+import { GEM, YELLOW } from './components/gemTypes';
 import { tier1, tier2, tier3 } from './components/cards';
 import { dealCards, canBuy } from './components/utils';
 
@@ -31,7 +31,7 @@ const Splendor = Game({
         [GEM.BLUE]: numOfGems,
         [GEM.WHITE]: numOfGems,
         [GEM.BLACK]: numOfGems,
-        [GEM.YELLOW]: 5, // allways 5 golden tokens
+        [YELLOW]: 5, // allways 5 golden tokens
       },
       decks: {
         tier1: ctx.random.Shuffle(tier1),
@@ -54,15 +54,14 @@ const Splendor = Game({
           [GEM.BLUE]: 0,
           [GEM.WHITE]: 0,
           [GEM.BLACK]: 0,
-          [GEM.YELLOW]: 0,
+          [YELLOW]: 0,
         },
         cards: {
           [GEM.RED]: [],
           [GEM.GREEN]: [],
           [GEM.BLUE]: [],
           [GEM.WHITE]: [],
-          [GEM.BLACK]: [],
-          [GEM.YELLOW]: [],
+          [GEM.BLACK]: []
         },
         reserved: []
       });
@@ -82,9 +81,9 @@ const Splendor = Game({
       }
 
       // cancel action if try to buy a golden gem
-      if (gems[0] === GEM.YELLOW
-        || gems[1] === GEM.YELLOW
-        || gems[2] === GEM.YELLOW) {
+      if (gems[0] === YELLOW
+        || gems[1] === YELLOW
+        || gems[2] === YELLOW) {
         return G;
       }
       // cancel action if any gem is not available to buy
@@ -150,7 +149,7 @@ const Splendor = Game({
       }
 
       if (accum > 0) {
-        player.gems[GEM.YELLOW] -= accum;
+        player.gems[YELLOW] -= accum;
       }
 
       player.cards[card.bonus].push(card);
@@ -170,7 +169,7 @@ const Splendor = Game({
       const Gcopy = { ...G };
       const player = Gcopy.players[ctx.currentPlayer];
       // check if can reserve
-      if (Gcopy.gems[GEM.YELLOW] === 0
+      if (Gcopy.gems[YELLOW] === 0
         || player.reserved.length === 3) {
         return G;
       }
@@ -178,8 +177,8 @@ const Splendor = Game({
       const card = Gcopy.cards[tier][pos];
       Gcopy.cards[tier].splice(pos, 1);
       player.reserved.push(card);
-      player.gems[GEM.YELLOW] += 1;
-      Gcopy.gems[GEM.YELLOW] -= 1;
+      player.gems[YELLOW] += 1;
+      Gcopy.gems[YELLOW] -= 1;
 
       return Gcopy;
     }

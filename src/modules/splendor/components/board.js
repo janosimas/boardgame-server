@@ -10,7 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './board.css';
 
-import { GEM } from '../components/gemTypes';
+import { GEM, YELLOW } from '../components/gemTypes';
 
 class Board extends React.Component {
   static propTypes = {
@@ -23,14 +23,30 @@ class Board extends React.Component {
     isConnected: PropTypes.bool,
   };
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      gemsOnHold: []
+    };
+
+    const G = this.props.G;
+    this.moves = {
+      selectGem: (gem) => {
+        if (G.gems[gem] === 0
+          || this.state.gemsOnHold.length === 3) {
+          return
+        }
+        const gemsOnHold = [...this.state.gemsOnHold, gem];
+        this.setState({ ...this.state, gemsOnHold })
+      }
+    }
+  }
+
   renderTokens(G) {
     return (<div style={{ border: "3px solid green", margin: "5px", width: "160px" }}>
-      <div>{GEM.YELLOW + ": " + G.gems[GEM.YELLOW]}</div>
-      <div>{GEM.RED + ": " + G.gems[GEM.RED]}</div>
-      <div>{GEM.GREEN + ": " + G.gems[GEM.GREEN]}</div>
-      <div>{GEM.BLUE + ": " + G.gems[GEM.BLUE]}</div>
-      <div>{GEM.WHITE + ": " + G.gems[GEM.WHITE]}</div>
-      <div>{GEM.BLACK + ": " + G.gems[GEM.BLACK]}</div>
+      <div>{YELLOW + ": " + G.gems[YELLOW]}</div>
+      {Object.keys(GEM).map(gem => <div key={gem} onClick={() => this.moves.selectGem(GEM[gem])} >{GEM[gem] + ": " + G.gems[GEM[gem]]}</div>)}
     </div>);
   }
 
@@ -69,25 +85,20 @@ class Board extends React.Component {
 
   renderPlayer(player) {
     return (<div style={{ border: "3px solid red", margin: "5px", width: "160px" }}>
-      <div>{GEM.YELLOW + ": " + player.cards[GEM.YELLOW].length + "+" + player.gems[GEM.YELLOW]}</div>
-      <div>{GEM.RED + ": " + player.cards[GEM.RED].length + "+" + player.gems[GEM.RED]}</div>
-      <div>{GEM.GREEN + ": " + player.cards[GEM.GREEN].length + "+" + player.gems[GEM.GREEN]}</div>
-      <div>{GEM.BLUE + ": " + player.cards[GEM.BLUE].length + "+" + player.gems[GEM.BLUE]}</div>
-      <div>{GEM.WHITE + ": " + player.cards[GEM.WHITE].length + "+" + player.gems[GEM.WHITE]}</div>
-      <div>{GEM.BLACK + ": " + player.cards[GEM.BLACK].length + "+" + player.gems[GEM.BLACK]}</div>
+      <div>{YELLOW + ": " + player.gems[YELLOW]}</div>
+      {Object.keys(GEM).map(gem => <div key={gem}>{GEM[gem] + ": " + player.cards[GEM[gem]].length + "+" + player.gems[GEM[gem]]}</div>)}
     </div>);
   }
 
   render() {
     const G = this.props.G;
     const ctx = this.props.ctx;
-    const tokens = this.renderTokens(G);
-    const cards = this.renderCards(G);
 
     return (
       <div>
-        <div>{tokens}</div>
-        <div>{cards}</div>
+        <div>{"on hold: " + this.state.gemsOnHold.map(gem => gem + " ")}</div>
+        <div>{this.renderTokens(G)}</div>
+        <div>{this.renderCards(G)}</div>
         <div>{this.renderPlayer(G.players[ctx.currentPlayer])}</div>
         {this.props.playerID}
         {this.props.isConnected}
