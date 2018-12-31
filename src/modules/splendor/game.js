@@ -101,13 +101,14 @@ const Splendor = Game({
         return G;
       }
 
-      const card = G.cards[tier][pos];
-      if (!canBuy(G.players[ctx.currentPlayer], card)) {
+      if (!canBuy(G.players[ctx.currentPlayer], G.cards[tier][pos])) {
         return G;
       }
 
       const Gcopy = { ...G };
       const player = Gcopy.players[ctx.currentPlayer];
+      const card = Gcopy.cards[tier][pos];
+      Gcopy.cards[tier].splice(pos, 1);
 
       let accum = 0;
       for (const key in GEM) {
@@ -138,6 +139,8 @@ const Splendor = Game({
         player.gems[GEM.YELLOW] -= accum;
       }
 
+      player.cards[card.bonus].push(card);
+
       return Gcopy;
     },
 
@@ -159,6 +162,7 @@ const Splendor = Game({
       }
 
       const card = Gcopy.cards[tier][pos];
+      Gcopy.cards[tier].splice(pos, 1);
       player.reserved.push(card);
       player.gems[GEM.YELLOW] += 1;
       Gcopy.gems[GEM.YELLOW] -= 1;
