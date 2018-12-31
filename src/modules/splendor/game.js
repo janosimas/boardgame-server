@@ -98,7 +98,39 @@ const Splendor = Game({
         return G;
       }
 
-      return { ...G };
+      const Gcopy = { ...G };
+      const player = Gcopy.players[ctx.currentPlayer];
+
+      let accum = 0;
+      for (const key in GEM) {
+        if (key === "YELLOW") {
+          continue;
+        }
+
+        // use cards to pay the cost
+        let temp = card[GEM[key]] - player.cards[GEM[key]];
+
+        // use gems to pay the cost
+        if (temp > 0) {
+          const cost = temp;
+          temp -= player.gems[GEM[key]];
+          player.gems[GEM[key]] -= cost;
+          if (player.gems[GEM[key]] < 0) {
+            player.gems[GEM[key]] = 0;
+          }
+        }
+
+        // accum the remainder to pay the cost with gold coins
+        if (temp > 0) {
+          accum += temp;
+        }
+      }
+
+      if (accum > 0) {
+        player.gems[GEM.YELLOW] -= accum;
+      }
+
+      return Gcopy;
     },
 
     reserveCard(G, ctx, tier, pos) {
