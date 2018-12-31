@@ -67,8 +67,20 @@ class Board extends React.Component {
     )
   }
 
+  renderPlayer(player) {
+    return (<div style={{ border: "3px solid red", margin: "5px", width: "160px" }}>
+      <div>{GEM.YELLOW + ": " + player.cards[GEM.YELLOW].length + "+" + player.gems[GEM.YELLOW]}</div>
+      <div>{GEM.RED + ": " + player.cards[GEM.RED].length + "+" + player.gems[GEM.RED]}</div>
+      <div>{GEM.GREEN + ": " + player.cards[GEM.GREEN].length + "+" + player.gems[GEM.GREEN]}</div>
+      <div>{GEM.BLUE + ": " + player.cards[GEM.BLUE].length + "+" + player.gems[GEM.BLUE]}</div>
+      <div>{GEM.WHITE + ": " + player.cards[GEM.WHITE].length + "+" + player.gems[GEM.WHITE]}</div>
+      <div>{GEM.BLACK + ": " + player.cards[GEM.BLACK].length + "+" + player.gems[GEM.BLACK]}</div>
+    </div>);
+  }
+
   render() {
     const G = this.props.G;
+    const ctx = this.props.ctx;
     const tokens = this.renderTokens(G);
     const cards = this.renderCards(G);
 
@@ -76,6 +88,7 @@ class Board extends React.Component {
       <div>
         <div>{tokens}</div>
         <div>{cards}</div>
+        <div>{this.renderPlayer(G.players[ctx.currentPlayer])}</div>
         {this.props.playerID}
         {this.props.isConnected}
       </div>
