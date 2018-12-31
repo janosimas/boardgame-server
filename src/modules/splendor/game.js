@@ -9,7 +9,9 @@
 import { Game } from 'boardgame.io/core';
 import { GEM } from './components/gemTypes';
 import { tier1, tier2, tier3 } from './components/cards';
-import { dealCards } from './components/utils';
+import { dealCards, canBuy } from './components/utils';
+
+import { isNil } from 'ramda';
 
 const Splendor = Game({
   name: 'Splendor',
@@ -52,7 +54,7 @@ const Splendor = Game({
   moves: {
     clickGem(G, ctx, gems) {
       // cancel action if didn't select 3 gems
-      if (gems === undefined
+      if (isNil(gems)
         || gems.length < 3) {
         return G;
       }
@@ -83,6 +85,18 @@ const Splendor = Game({
     },
 
     buyCard(G, ctx, tier, pos) {
+      //cancel action if no tier or position
+      if (isNil(tier)
+        || isNil(pos)
+        || pos < 0
+        || pos > 3) {
+        return G;
+      }
+
+      const card = G.cards[tier][pos];
+      if (!canBuy(G.players[ctx.currentPlayer], card)) {
+        return G;
+      }
 
       return { ...G };
     },
