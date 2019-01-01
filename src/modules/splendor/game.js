@@ -107,13 +107,13 @@ const Splendor = Game({
         || isNil(pos)
         || pos < 0
         || pos > 3) {
-        return G;
+        return;
       }
 
       const player = G.players[ctx.currentPlayer];
       const card = G.cards[tier][pos];
       if (!canBuy(player, card)) {
-        return G;
+        return;
       }
 
       G.cards[tier].splice(pos, 1);
