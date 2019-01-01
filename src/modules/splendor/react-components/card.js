@@ -5,22 +5,23 @@ import { renderGem } from './gem';
 import { isNil } from 'ramda';
 
 // TODO: highlight possible cards to buy
-const renderCard = (card, selected) => {
+const renderCard = (card, moves, isSelected) => {
   const view = [];
   if (card === undefined) {
     return;
   }
 
-  view.push(<div style={{ display: "flex" }}>{renderGem(card.bonus)} {card.points}</div>);
+  view.push(<div key={'header'} style={{ display: "flex" }}>{renderGem(card.bonus)} {card.points}</div>);
 
   for (const key in GEM) {
     const gem = GEM[key];
-    view.push(<div style={{ display: "flex" }}>{renderGem(gem)}{": " + card[gem]}</div>);
+    view.push(<div key={gem} style={{ display: "flex" }}>{renderGem(gem)}{": " + card[gem]}</div>);
   }
 
   const style = { border: "3px solid black", margin: "5px", width: "100px" };
-  if (selected) {
+  if (isSelected) {
     style.border = "3px solid blue";
+    view.push(<button key={'buy'} onClick={() => moves.buyCard()}>ok</button>);
   }
 
   return (
@@ -28,15 +29,15 @@ const renderCard = (card, selected) => {
   )
 }
 
-export const renderCards = (G, selectedCard, clickCard) => {
+export const renderCards = (G, moves, selectedCard) => {
   return (
     <div>
       {Object.keys(TIER).map(key => {
         return <div key={key} style={{ display: "flex" }}>
           {G.cards[TIER[key]].map((card, i) => <div
             key={i}
-            onClick={() => clickCard(TIER[key], i)}
-          >{renderCard(card, (!isNil(selectedCard)) && selectedCard.tier === TIER[key] && selectedCard.index === i)}</div>)}
+            onClick={() => moves.selectCard(TIER[key], i)}
+          >{renderCard(card, moves, (!isNil(selectedCard)) && selectedCard.tier === TIER[key] && selectedCard.index === i)}</div>)}
         </div>
       })}
     </div>

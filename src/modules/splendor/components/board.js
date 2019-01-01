@@ -102,6 +102,20 @@ class Board extends React.Component {
           index
         }
         this.setState({ selectedCard });
+      },
+
+      buyCard: () => {
+        if (this.props.ctx.currentPlayer != this.props.playerID) {
+          return;
+        }
+
+        if (!this.moves.checkAction(ACTION.SELECT_CARD)) {
+          return;
+        }
+
+        const selectedCard = this.state.selectedCard;
+        this.moves.resetActionState();
+        this.props.moves.buyCard(selectedCard.tier, selectedCard.index);
       }
     }
   }
@@ -129,9 +143,9 @@ class Board extends React.Component {
 
     return (
       <div>
-        <div>{renderHold(this.state.gemsOnHold, this.moves)}</div>
+        <div>{renderHold(this.moves, this.state.gemsOnHold)}</div>
         <div>{this.renderTokens(G)}</div>
-        <div>{renderCards(G, this.state.selectedCard, this.moves.selectCard)}</div>
+        <div>{renderCards(G, this.moves, this.state.selectedCard)}</div>
         <div>{this.renderPlayer(G.players[playerID])}</div>
         {this.props.playerID}
         {this.props.isConnected}
