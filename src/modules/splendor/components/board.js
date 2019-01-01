@@ -14,6 +14,7 @@ import { GEM, YELLOW } from './gems';
 import { renderGem } from '../react-components/gem';
 import { uniq } from 'ramda';
 import { renderCards } from '../react-components/card';
+import { renderHold } from '../react-components/gemHold';
 
 class Board extends React.Component {
   static propTypes = {
@@ -47,7 +48,6 @@ class Board extends React.Component {
           return;
         }
         gemsOnHold.push(gem);
-        // G.gems[gem]--;
         this.setState({ gemsOnHold });
       },
 
@@ -57,7 +57,6 @@ class Board extends React.Component {
         }
 
         const gemsOnHold = this.state.gemsOnHold;
-        // G.gems[gemsOnHold[index]]++;
         gemsOnHold.splice(index, 1);
         this.setState({ gemsOnHold });
       },
@@ -68,12 +67,26 @@ class Board extends React.Component {
         }
 
         this.props.moves.clickGem(gems);
-        const gemsOnHold = [];
-        this.setState({ gemsOnHold });
+        this.moves.resetActionState();
       },
 
-      clickCard: (tier, index) => {
-        return;
+      resetActionState: () => {
+        const gemsOnHold = [];
+        const selectedCard = undefined;
+        this.setState({ gemsOnHold, selectedCard });
+      },
+
+      selectCard: (tier, index) => {
+        if (this.props.ctx.currentPlayer != this.props.playerID) {
+          return;
+        }
+
+        this.moves.resetActionState();
+        const selectedCard = {
+          tier,
+          index
+        }
+        this.setState({ selectedCard });
       }
     }
   }
@@ -95,29 +108,15 @@ class Board extends React.Component {
     </div>);
   }
 
-  renderHold() {
-    const gemsOnHold = this.state.gemsOnHold;
-    let okButton = null;
-    if (uniq(gemsOnHold).length === 3
-      || (gemsOnHold.length === 2 && gemsOnHold[0] === gemsOnHold[1])) {
-      okButton = <button onClick={() => this.moves.clickGem(gemsOnHold)}>{"ok"}</button>;
-    }
-
-    return <div style={{ display: "flex" }}>
-      {this.state.gemsOnHold.map((gem, i) => <div key={i} onClick={() => this.moves.removeFromHold(i)} >{renderGem(gem)}</div>)}
-      {okButton}
-    </div>
-  }
-
   render() {
     const G = this.props.G;
     const playerID = this.props.playerID;
 
     return (
       <div>
-        <div>{this.renderHold()}</div>
+        <div>{renderHold(this.state.gemsOnHold, this.moves)}</div>
         <div>{this.renderTokens(G)}</div>
-        <div>{renderCards(G)}</div>
+        <div>{renderCards(G, this.state.selectedCard, this.moves.selectCard)}</div>
         <div>{this.renderPlayer(G.players[playerID])}</div>
         {this.props.playerID}
         {this.props.isConnected}
