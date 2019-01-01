@@ -53,7 +53,7 @@ class Board extends React.Component {
         }
 
         const gemsOnHold = this.state.gemsOnHold;
-        if (this.props.G.gems[gem] === 0
+        if (this.props.G.gems[gem] === 0 // FIXME: this will allow getting 2 gems if there is only 1 in the bank
           || uniq(gemsOnHold).length === 3
           || (gemsOnHold.length === 2 && (gemsOnHold[0] === gemsOnHold[1] || gemsOnHold[0] === gem || gemsOnHold[1] === gem))) {
           return;

@@ -4,6 +4,7 @@ import { TIER } from '../components/tiers';
 import { renderGem } from './gem';
 import { isNil } from 'ramda';
 
+// TODO: highlight possible cards to buy
 const renderCard = (card, selected) => {
   const view = [];
   if (card === undefined) {
