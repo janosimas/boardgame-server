@@ -2,7 +2,7 @@ import React from 'react';
 import { uniq } from 'ramda';
 import { renderGem } from './gem';
 
-export const renderHold = (gemsOnHold, moves) => {
+export const renderHold = (moves, gemsOnHold) => {
   let okButton = null;
   if (uniq(gemsOnHold).length === 3
     || (gemsOnHold.length === 2 && gemsOnHold[0] === gemsOnHold[1])) {
