@@ -12,9 +12,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
 const port = process.env.PORT || 8000;
+const env = process.env.NODE_ENV
 
 module.exports = {
   entry: ['webpack-hot-middleware/client', path.resolve(__dirname, 'index.js')],
+  mode: env || 'development',
 
   output: {
     publicPath: '/',
