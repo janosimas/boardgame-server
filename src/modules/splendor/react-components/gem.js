@@ -9,7 +9,8 @@ for (const key in GEM) {
       width: 20,
       height: 20,
       backgroundColor: GEM[key],
-      margin: 7
+      margin: 7,
+      border: "1px solid black"
     }} />;
   }
 }
