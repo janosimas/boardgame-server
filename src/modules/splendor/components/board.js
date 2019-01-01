@@ -10,9 +10,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './board.css';
 
-import { GEM, YELLOW } from '../components/gemTypes';
-import { RenderGem } from '../react-components/gem';
+import { GEM, YELLOW } from './gems';
+import { renderGem } from '../react-components/gem';
 import { uniq } from 'ramda';
+import { renderCards } from '../react-components/card';
 
 class Board extends React.Component {
   static propTypes = {
@@ -69,54 +70,28 @@ class Board extends React.Component {
         this.props.moves.clickGem(gems);
         const gemsOnHold = [];
         this.setState({ gemsOnHold });
+      },
+
+      clickCard: (tier, index) => {
+        return;
       }
     }
   }
 
   renderTokens(G) {
-    return (<div style={{ border: "3px solid green", margin: "5px", width: "160px" }}>
-      <div>{YELLOW + ": " + G.gems[YELLOW]}</div>
-      {Object.keys(GEM).map(gem => <div key={gem} onClick={() => this.moves.selectGem(GEM[gem])} >{GEM[gem] + ": " + G.gems[GEM[gem]]}</div>)}
+    return (<div style={{ border: "3px solid green", margin: "5px", width: "100px" }}>
+      <div style={{ display: "flex" }}>{renderGem(YELLOW)} {": " + G.gems[YELLOW]}</div>
+      {Object.keys(GEM).map(gem => <div
+        key={gem}
+        onClick={() => this.moves.selectGem(GEM[gem])}
+        style={{ display: "flex" }}>{renderGem(GEM[gem])} {": " + G.gems[GEM[gem]]}</div>)}
     </div>);
   }
 
-  renderObj(obj) {
-    const view = [];
-    if (obj === undefined) {
-      return (<div />);
-    }
-
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        const element = obj[key];
-        view.push(<div>{key + ": " + element}</div>);
-      }
-    }
-    return (
-      <div style={{ border: "3px solid black", margin: "5px", width: "100px" }}>{view}</div>
-    )
-  }
-
-  renderCards(G) {
-    return (
-      <div>
-        <div style={{ display: "flex" }}>
-          {G.cards.tier1.map((card, i) => <div key={i}>{this.renderObj(card)}</div>)}
-        </div>
-        <div style={{ display: "flex" }}>
-          {G.cards.tier2.map((card, i) => <div key={i}>{this.renderObj(card)}</div>)}
-        </div>
-        <div style={{ display: "flex" }}>
-          {G.cards.tier3.map((card, i) => <div key={i}>{this.renderObj(card)}</div>)}
-        </div>
-      </div>
-    )
-  }
-
   renderPlayer(player) {
-    return (<div style={{ border: "3px solid red", margin: "5px", width: "160px" }}>
-      <div>{YELLOW + ": " + player.gems[YELLOW]}</div>
-      {Object.keys(GEM).map(gem => <div key={gem}>{GEM[gem] + ": " + player.cards[GEM[gem]].length + "+" + player.gems[GEM[gem]]}</div>)}
+    return (<div style={{ border: "3px solid red", margin: "5px", width: "100px" }}>
+      <div style={{ display: "flex" }}>{renderGem(YELLOW)} {": " + player.gems[YELLOW]}</div>
+      {Object.keys(GEM).map(gem => <div key={gem} style={{ display: "flex" }}>{renderGem(GEM[gem])} {": " + player.cards[GEM[gem]].length + "+" + player.gems[GEM[gem]]}</div>)}
     </div>);
   }
 
@@ -129,21 +104,20 @@ class Board extends React.Component {
     }
 
     return <div style={{ display: "flex" }}>
-      {this.state.gemsOnHold.map((gem, i) => <div key={i} onClick={() => this.moves.removeFromHold(i)} >{RenderGem[gem]}</div>)}
+      {this.state.gemsOnHold.map((gem, i) => <div key={i} onClick={() => this.moves.removeFromHold(i)} >{renderGem(gem)}</div>)}
       {okButton}
     </div>
   }
 
   render() {
     const G = this.props.G;
-    const ctx = this.props.ctx;
     const playerID = this.props.playerID;
 
     return (
       <div>
         <div>{this.renderHold()}</div>
         <div>{this.renderTokens(G)}</div>
-        <div>{this.renderCards(G)}</div>
+        <div>{renderCards(G)}</div>
         <div>{this.renderPlayer(G.players[playerID])}</div>
         {this.props.playerID}
         {this.props.isConnected}

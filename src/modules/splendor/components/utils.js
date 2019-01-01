@@ -1,4 +1,4 @@
-import { GEM, YELLOW } from "./gemTypes";
+import { GEM, YELLOW } from "./gems";
 
 const dealFromDeck = (G, deck) => {
   while (G.cards[deck].length < 4) {

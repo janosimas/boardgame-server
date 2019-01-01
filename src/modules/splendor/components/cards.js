@@ -1,4 +1,4 @@
-import { GEM } from './gemTypes';
+import { GEM } from './gems';
 
 const black = {
   tier1: [
