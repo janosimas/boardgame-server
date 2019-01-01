@@ -35,18 +35,40 @@ class Board extends React.Component {
     const G = this.props.G;
     this.moves = {
       selectGem: (gem) => {
-        if (G.gems[gem] === 0
-          || this.state.gemsOnHold.length === 3) {
-          return
+        if (this.props.ctx.currentPlayer != this.props.playerID) {
+          return;
         }
-        const gemsOnHold = [...this.state.gemsOnHold, gem];
-        this.setState({ ...this.state, gemsOnHold })
+
+        const gemsOnHold = this.state.gemsOnHold;
+        if (G.gems[gem] === 0
+          || uniq(gemsOnHold).length === 3
+          || (gemsOnHold.length === 2 && (gemsOnHold[0] === gemsOnHold[1] || gemsOnHold[0] === gem || gemsOnHold[1] === gem))) {
+          return;
+        }
+        gemsOnHold.push(gem);
+        // G.gems[gem]--;
+        this.setState({ gemsOnHold });
       },
 
       removeFromHold: (index) => {
+        if (this.props.ctx.currentPlayer != this.props.playerID) {
+          return;
+        }
+
         const gemsOnHold = this.state.gemsOnHold;
+        // G.gems[gemsOnHold[index]]++;
         gemsOnHold.splice(index, 1);
-        this.setState({ ...this.state, gemsOnHold })
+        this.setState({ gemsOnHold });
+      },
+
+      clickGem: (gems) => {
+        if (this.props.ctx.currentPlayer != this.props.playerID) {
+          return;
+        }
+
+        this.props.moves.clickGem(gems);
+        const gemsOnHold = [];
+        this.setState({ gemsOnHold });
       }
     }
   }
@@ -71,7 +93,7 @@ class Board extends React.Component {
       }
     }
     return (
-      <div style={{ border: "3px solid black", margin: "5px", width: "160px" }}>{view}</div>
+      <div style={{ border: "3px solid black", margin: "5px", width: "100px" }}>{view}</div>
     )
   }
 
@@ -103,7 +125,7 @@ class Board extends React.Component {
     let okButton = null;
     if (uniq(gemsOnHold).length === 3
       || (gemsOnHold.length === 2 && gemsOnHold[0] === gemsOnHold[1])) {
-      okButton = <button>{"ok"}</button>;
+      okButton = <button onClick={() => this.moves.clickGem(gemsOnHold)}>{"ok"}</button>;
     }
 
     return <div style={{ display: "flex" }}>
@@ -115,13 +137,14 @@ class Board extends React.Component {
   render() {
     const G = this.props.G;
     const ctx = this.props.ctx;
+    const playerID = this.props.playerID;
 
     return (
       <div>
         <div>{this.renderHold()}</div>
         <div>{this.renderTokens(G)}</div>
         <div>{this.renderCards(G)}</div>
-        <div>{this.renderPlayer(G.players[ctx.currentPlayer])}</div>
+        <div>{this.renderPlayer(G.players[playerID])}</div>
         {this.props.playerID}
         {this.props.isConnected}
       </div>

@@ -11,7 +11,7 @@ import { GEM, YELLOW } from './components/gemTypes';
 import { tier1, tier2, tier3 } from './components/cards';
 import { dealCards, canBuy } from './components/utils';
 
-import { isNil } from 'ramda';
+import { isNil, uniq } from 'ramda';
 
 const Splendor = Game({
   name: 'Splendor',
@@ -75,34 +75,30 @@ const Splendor = Game({
   moves: {
     clickGem(G, ctx, gems) {
       // cancel action if didn't select 3 gems
-      if (isNil(gems)
-        || gems.length < 3) {
-        return G;
+      if (isNil(gems)) {
+        return;
+      }
+
+      if ((gems.length === 2 && gems[0] != gems[1])
+        || (gems.length === 3 && uniq(gems).length != 3)) {
+        return;
       }
 
       // cancel action if try to buy a golden gem
-      if (gems[0] === YELLOW
-        || gems[1] === YELLOW
-        || gems[2] === YELLOW) {
-        return G;
+      if (gems.find(gem => gem === YELLOW)) {
+        return;
       }
       // cancel action if any gem is not available to buy
-      if (G.gems[gems[0]] === 0
-        || G.gems[gems[1]] === 0
-        || G.gems[gems[2]] === 0) {
-        return G;
+      if (gems.some(gem => G.gems[gem] === 0)) {
+        return;
       }
 
-      const Gcopy = { ...G };
-      Gcopy.gems[gems[0]] -= 1;
-      Gcopy.gems[gems[1]] -= 1;
-      Gcopy.gems[gems[2]] -= 1;
+      gems.forEach(gem => {
+        G.players[ctx.currentPlayer].gems[gem]++;
+        G.gems[gem]--;
+      });
 
-      Gcopy.players[ctx.currentPlayer].gems[gems[0]] += 1;
-      Gcopy.players[ctx.currentPlayer].gems[gems[1]] += 1;
-      Gcopy.players[ctx.currentPlayer].gems[gems[2]] += 1;
-
-      return Gcopy;
+      return G;
     },
 
     buyCard(G, ctx, tier, pos) {
@@ -177,8 +173,8 @@ const Splendor = Game({
       const card = Gcopy.cards[tier][pos];
       Gcopy.cards[tier].splice(pos, 1);
       player.reserved.push(card);
-      player.gems[YELLOW] += 1;
-      Gcopy.gems[YELLOW] -= 1;
+      player.gems[YELLOW]++;
+      Gcopy.gems[YELLOW]--;
 
       return Gcopy;
     }
