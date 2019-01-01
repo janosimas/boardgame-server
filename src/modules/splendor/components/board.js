@@ -15,6 +15,7 @@ import { renderGem } from '../react-components/gem';
 import { uniq } from 'ramda';
 import { renderCards } from '../react-components/card';
 import { renderHold } from '../react-components/gemHold';
+import { ACTION } from '../react-components/actions';
 
 class Board extends React.Component {
   static propTypes = {
@@ -34,15 +35,25 @@ class Board extends React.Component {
       gemsOnHold: []
     };
 
-    const G = this.props.G;
     this.moves = {
+      registerAction: actionID => {
+        this.setState({ actionID });
+      },
+
+      checkAction: actionID => actionID === this.state.actionID,
+
       selectGem: (gem) => {
         if (this.props.ctx.currentPlayer != this.props.playerID) {
           return;
         }
 
+        if (!this.moves.checkAction(ACTION.SELECT_GEM)) {
+          this.moves.resetActionState();
+          this.moves.registerAction(ACTION.SELECT_GEM);
+        }
+
         const gemsOnHold = this.state.gemsOnHold;
-        if (G.gems[gem] === 0
+        if (this.props.G.gems[gem] === 0
           || uniq(gemsOnHold).length === 3
           || (gemsOnHold.length === 2 && (gemsOnHold[0] === gemsOnHold[1] || gemsOnHold[0] === gem || gemsOnHold[1] === gem))) {
           return;
@@ -61,7 +72,7 @@ class Board extends React.Component {
         this.setState({ gemsOnHold });
       },
 
-      clickGem: (gems) => {
+      finishSelectingGems: (gems) => {
         if (this.props.ctx.currentPlayer != this.props.playerID) {
           return;
         }
@@ -81,7 +92,11 @@ class Board extends React.Component {
           return;
         }
 
-        this.moves.resetActionState();
+        if (!this.moves.checkAction(ACTION.SELECT_CARD)) {
+          this.moves.resetActionState();
+          this.moves.registerAction(ACTION.SELECT_CARD);
+        }
+
         const selectedCard = {
           tier,
           index

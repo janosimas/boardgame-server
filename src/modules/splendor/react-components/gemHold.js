@@ -6,7 +6,7 @@ export const renderHold = (gemsOnHold, moves) => {
   let okButton = null;
   if (uniq(gemsOnHold).length === 3
     || (gemsOnHold.length === 2 && gemsOnHold[0] === gemsOnHold[1])) {
-    okButton = <button onClick={() => moves.clickGem(gemsOnHold)}>{"ok"}</button>;
+    okButton = <button onClick={() => moves.finishSelectingGems(gemsOnHold)}>{"ok"}</button>;
   }
 
   return <div style={{ display: "flex" }}>
