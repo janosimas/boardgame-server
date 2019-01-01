@@ -7,7 +7,7 @@
  */
 
 import { Game } from 'boardgame.io/core';
-import { GEM, YELLOW } from './components/gemTypes';
+import { GEM, YELLOW } from './components/gems';
 import { tier1, tier2, tier3 } from './components/cards';
 import { dealCards, canBuy } from './components/utils';
 
@@ -110,21 +110,16 @@ const Splendor = Game({
         return G;
       }
 
-      if (!canBuy(G.players[ctx.currentPlayer], G.cards[tier][pos])) {
+      const player = G.players[ctx.currentPlayer];
+      const card = G.cards[tier][pos];
+      if (!canBuy(player, card)) {
         return G;
       }
 
-      const Gcopy = { ...G };
-      const player = Gcopy.players[ctx.currentPlayer];
-      const card = Gcopy.cards[tier][pos];
-      Gcopy.cards[tier].splice(pos, 1);
+      G.cards[tier].splice(pos, 1);
 
       let accum = 0;
       for (const key in GEM) {
-        if (key === "YELLOW") {
-          continue;
-        }
-
         // use cards to pay the cost
         let temp = card[GEM[key]] - player.cards[GEM[key]];
 
@@ -150,7 +145,7 @@ const Splendor = Game({
 
       player.cards[card.bonus].push(card);
 
-      return Gcopy;
+      return G;
     },
 
     reserveCard(G, ctx, tier, pos) {
@@ -162,21 +157,20 @@ const Splendor = Game({
         return G;
       }
 
-      const Gcopy = { ...G };
-      const player = Gcopy.players[ctx.currentPlayer];
+      const player = G.players[ctx.currentPlayer];
       // check if can reserve
-      if (Gcopy.gems[YELLOW] === 0
+      if (G.gems[YELLOW] === 0
         || player.reserved.length === 3) {
         return G;
       }
 
-      const card = Gcopy.cards[tier][pos];
-      Gcopy.cards[tier].splice(pos, 1);
+      const card = G.cards[tier][pos];
+      G.cards[tier].splice(pos, 1);
       player.reserved.push(card);
       player.gems[YELLOW]++;
-      Gcopy.gems[YELLOW]--;
+      G.gems[YELLOW]--;
 
-      return Gcopy;
+      return G;
     }
   },
 
