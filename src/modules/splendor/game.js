@@ -9,7 +9,7 @@
 import { Game } from 'boardgame.io/core';
 import { GEM, YELLOW } from './components/gems';
 import { tier1, tier2, tier3 } from './components/cards';
-import { dealCards, canBuy } from './components/utils';
+import { dealCards, canBuy, canReserve } from './components/utils';
 
 import { isNil, uniq } from 'ramda';
 
@@ -155,14 +155,13 @@ const Splendor = Game({
         || isNil(pos)
         || pos < 0
         || pos > 3) {
-        return G;
+        return;
       }
 
       const player = G.players[ctx.currentPlayer];
       // check if can reserve
-      if (G.gems[YELLOW] === 0
-        || player.reserved.length === 3) {
-        return G;
+      if (!canReserve(G, player)) {
+        return;
       }
 
       const card = G.cards[tier][pos];
@@ -170,14 +169,14 @@ const Splendor = Game({
       player.reserved.push(card);
       player.gems[YELLOW]++;
       G.gems[YELLOW]--;
-
-      return G;
     }
   },
 
   flow: {
     movesPerTurn: 1,
-
+    onTurnBegin: (G, ctx) => {
+      dealCards(G);
+    },
     endGameIf: (G, ctx) => {
     },
   },

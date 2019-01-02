@@ -35,3 +35,5 @@ export const canBuy = (player, card) => {
 
   return accum <= player.gems[YELLOW];
 }
+
+export const canReserve = (G, player) => G.gems[YELLOW] != 0 && player.reserved.length != 3;

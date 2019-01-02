@@ -10,12 +10,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './board.css';
 
-import { GEM, YELLOW } from './gems';
-import { renderGem } from '../react-components/gem';
 import { uniq } from 'ramda';
 import { renderCards } from '../react-components/card';
-import { renderHold } from '../react-components/gemHold';
+import { renderHold, renderTokens } from '../react-components/tokens';
 import { ACTION } from '../react-components/actions';
+import { renderPlayer } from '../react-components/player';
 
 class Board extends React.Component {
   static propTypes = {
@@ -116,25 +115,22 @@ class Board extends React.Component {
         const selectedCard = this.state.selectedCard;
         this.moves.resetActionState();
         this.props.moves.buyCard(selectedCard.tier, selectedCard.index);
+      },
+
+      reserveCard: () => {
+        if (this.props.ctx.currentPlayer != this.props.playerID) {
+          return;
+        }
+
+        if (!this.moves.checkAction(ACTION.SELECT_CARD)) {
+          return;
+        }
+
+        const selectedCard = this.state.selectedCard;
+        this.moves.resetActionState();
+        this.props.moves.reserveCard(selectedCard.tier, selectedCard.index);
       }
     }
-  }
-
-  renderTokens(G) {
-    return (<div style={{ border: "3px solid green", margin: "5px", width: "100px" }}>
-      <div style={{ display: "flex" }}>{renderGem(YELLOW)} {": " + G.gems[YELLOW]}</div>
-      {Object.keys(GEM).map(gem => <div
-        key={gem}
-        onClick={() => this.moves.selectGem(GEM[gem])}
-        style={{ display: "flex" }}>{renderGem(GEM[gem])} {": " + G.gems[GEM[gem]]}</div>)}
-    </div>);
-  }
-
-  renderPlayer(player) {
-    return (<div style={{ border: "3px solid red", margin: "5px", width: "100px" }}>
-      <div style={{ display: "flex" }}>{renderGem(YELLOW)} {": " + player.gems[YELLOW]}</div>
-      {Object.keys(GEM).map(gem => <div key={gem} style={{ display: "flex" }}>{renderGem(GEM[gem])} {": " + player.cards[GEM[gem]].length + "+" + player.gems[GEM[gem]]}</div>)}
-    </div>);
   }
 
   render() {
@@ -145,9 +141,9 @@ class Board extends React.Component {
     return (
       <div>
         <div>{renderHold(this.moves, this.state.gemsOnHold)}</div>
-        <div>{this.renderTokens(G)}</div>
+        <div>{renderTokens(G)}</div>
         <div>{renderCards(G, ctx, playerID, this.moves, this.state.selectedCard)}</div>
-        <div>{this.renderPlayer(G.players[playerID])}</div>
+        <div>{renderPlayer(G.players[playerID])}</div>
         {this.props.playerID}
         {this.props.isConnected}
       </div>
