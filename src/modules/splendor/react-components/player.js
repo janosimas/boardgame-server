@@ -1,13 +1,7 @@
 import React from 'react';
 import { renderGem } from './gem';
 import { YELLOW, GEM } from '../components/gems';
-import { reduce } from 'ramda';
-
-const calcPoints = player => {
-  let total = 0;
-  Object.keys(GEM).map(gem => total += reduce((acc, c) => acc + c.points, 0, player.cards[GEM[gem]]));
-  return total;
-}
+import { calcPoints } from '../components/utils';
 
 export const renderPlayer = (player) => {
   const totalPoints = calcPoints(player)

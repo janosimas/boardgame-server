@@ -9,7 +9,7 @@
 import { Game } from 'boardgame.io/core';
 import { GEM, YELLOW } from './components/gems';
 import { tier1, tier2, tier3 } from './components/cards';
-import { dealCards, canBuy, canReserve } from './components/utils';
+import { dealCards, canBuy, canReserve, calcPoints } from './components/utils';
 
 import { isNil, uniq } from 'ramda';
 
@@ -178,6 +178,24 @@ const Splendor = Game({
       dealCards(G);
     },
     endGameIf: (G, ctx) => {
+      let maxPoints = 0;
+      let maxPlayer = null;
+      for (const playerID in G.players) {
+        if (G.players.hasOwnProperty(playerID)) {
+          const player = G.players[playerID];
+          const points = calcPoints(player);
+          if (points > 15 && points > maxPoints) {
+            maxPoints = points;
+            maxPlayer = playerID;
+          }
+        }
+      }
+
+      if (!isNil(maxPlayer)) {
+        return maxPlayer;
+      } else {
+        false;
+      }
     },
   },
 });

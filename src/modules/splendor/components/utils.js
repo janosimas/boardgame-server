@@ -1,4 +1,11 @@
 import { GEM, YELLOW } from "./gems";
+import { reduce } from 'ramda';
+
+export const calcPoints = player => {
+  let total = 0;
+  Object.keys(GEM).map(gem => total += reduce((acc, c) => acc + c.points, 0, player.cards[GEM[gem]]));
+  return total;
+}
 
 const dealFromDeck = (G, deck) => {
   while (G.cards[deck].length < 4) {
