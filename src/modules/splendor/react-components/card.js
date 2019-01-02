@@ -3,9 +3,10 @@ import { GEM } from '../components/gems';
 import { TIER } from '../components/tiers';
 import { renderGem } from './gem';
 import { isNil } from 'ramda';
+import { canBuy } from '../components/utils';
 
 // TODO: highlight possible cards to buy
-const renderCard = (card, moves, isSelected) => {
+const renderCard = (G, ctx, playerID, card, moves, isSelected) => {
   const view = [];
   if (card === undefined) {
     return;
@@ -19,9 +20,11 @@ const renderCard = (card, moves, isSelected) => {
   }
 
   const style = { border: "3px solid black", margin: "5px", width: "100px" };
-  if (isSelected) {
+  if (isSelected && ctx.currentPlayer === playerID) {
     style.border = "3px solid blue";
-    view.push(<button key={'buy'} onClick={() => moves.buyCard()}>ok</button>);
+    if (canBuy(G.players[playerID], card)) {
+      view.push(<button key={'buy'} onClick={() => moves.buyCard()}>ok</button>);
+    }
   }
 
   return (
@@ -29,7 +32,7 @@ const renderCard = (card, moves, isSelected) => {
   )
 }
 
-export const renderCards = (G, moves, selectedCard) => {
+export const renderCards = (G, ctx, playerID, moves, selectedCard) => {
   return (
     <div>
       {Object.keys(TIER).map(key => {
@@ -37,7 +40,7 @@ export const renderCards = (G, moves, selectedCard) => {
           {G.cards[TIER[key]].map((card, i) => <div
             key={i}
             onClick={() => moves.selectCard(TIER[key], i)}
-          >{renderCard(card, moves, (!isNil(selectedCard)) && selectedCard.tier === TIER[key] && selectedCard.index === i)}</div>)}
+          >{renderCard(G, ctx, playerID, card, moves, (!isNil(selectedCard)) && selectedCard.tier === TIER[key] && selectedCard.index === i)}</div>)}
         </div>
       })}
     </div>

@@ -139,13 +139,14 @@ class Board extends React.Component {
 
   render() {
     const G = this.props.G;
+    const ctx = this.props.ctx;
     const playerID = this.props.playerID;
 
     return (
       <div>
         <div>{renderHold(this.moves, this.state.gemsOnHold)}</div>
         <div>{this.renderTokens(G)}</div>
-        <div>{renderCards(G, this.moves, this.state.selectedCard)}</div>
+        <div>{renderCards(G, ctx, playerID, this.moves, this.state.selectedCard)}</div>
         <div>{this.renderPlayer(G.players[playerID])}</div>
         {this.props.playerID}
         {this.props.isConnected}
