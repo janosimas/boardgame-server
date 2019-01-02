@@ -6,7 +6,7 @@ import { isNil } from 'ramda';
 import { canBuy, canReserve } from '../components/utils';
 
 // TODO: highlight possible cards to buy
-const renderCard = (G, ctx, playerID, card, moves, isSelected) => {
+export const renderCard = (G, ctx, playerID, card, moves, isSelected) => {
   const view = [];
   if (card === undefined) {
     return;
@@ -19,14 +19,17 @@ const renderCard = (G, ctx, playerID, card, moves, isSelected) => {
     {card.points}
   </div>);
 
-  view.push(<div
-    style={{
-      display: 'flex',
-      flexWrap: 'wrap',
-    }}>
-    {Object.keys(GEM).map(key => card[GEM[key]] === 0 ? null :
-      <div key={key} style={{ display: "flex" }}>{renderGem(GEM[key], card[GEM[key]])}</div>)}
-  </div>
+  view.push(
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+      }}
+      key={'cards'}
+    >
+      {Object.keys(GEM).map(key => card[GEM[key]] === 0 ? null :
+        <div key={key} style={{ display: "flex" }}>{renderGem(GEM[key], card[GEM[key]])}</div>)}
+    </div>
   );
 
   const style = { border: "3px solid black", margin: "5px", width: "100px" };

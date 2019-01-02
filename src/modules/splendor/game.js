@@ -8,10 +8,11 @@
 
 import { Game } from 'boardgame.io/core';
 import { GEM, YELLOW } from './components/gems';
-import { tier1, tier2, tier3 } from './components/cards';
+import { cards } from './components/cards';
 import { dealCards, canBuy, canReserve, calcPoints } from './components/utils';
 
-import { isNil, uniq } from 'ramda';
+import { isNil, isEmpty, uniq } from 'ramda';
+import { TIER } from './components/tiers';
 
 const Splendor = Game({
   name: 'Splendor',
@@ -33,15 +34,11 @@ const Splendor = Game({
         [GEM.BLACK]: numOfGems,
         [YELLOW]: 5, // allways 5 golden tokens
       },
-      decks: {
-        tier1: ctx.random.Shuffle(tier1),
-        tier2: ctx.random.Shuffle(tier2),
-        tier3: ctx.random.Shuffle(tier3),
-      },
+      decks: cards,
       cards: {
-        tier1: [],
-        tier2: [],
-        tier3: [],
+        [TIER.ONE]: [],
+        [TIER.TWO]: [],
+        [TIER.THREE]: [],
       },
       players: []
     };
@@ -111,12 +108,11 @@ const Splendor = Game({
       }
 
       const player = G.players[ctx.currentPlayer];
-      const card = G.cards[tier][pos];
+      let card = tier === TIER.RESERVE ? player.reserved[pos] : G.cards[tier][pos];
       if (!canBuy(player, card)) {
         return;
       }
-
-      G.cards[tier].splice(pos, 1);
+      tier === TIER.RESERVE ? player.reserved.splice(pos, 1) : G.cards[tier].splice(pos, 1);
 
       let accum = 0;
       for (const key in GEM) {
@@ -179,20 +175,45 @@ const Splendor = Game({
     },
     endGameIf: (G, ctx) => {
       let maxPoints = 0;
-      let maxPlayer = null;
+      let maxPointsPlayers = [];
+
+      // check for players with 15 or more points
       for (const playerID in G.players) {
         if (G.players.hasOwnProperty(playerID)) {
           const player = G.players[playerID];
           const points = calcPoints(player);
-          if (points > 15 && points > maxPoints) {
-            maxPoints = points;
-            maxPlayer = playerID;
+          if (points >= 15) {
+            if (points > maxPoints) {
+              // player with most points
+              maxPoints = points;
+              maxPointsPlayers = [playerID];
+            } else if (points === maxPoints) {
+              // tie between players
+              maxPointsPlayers.push(playerID);
+            }
           }
         }
       }
 
-      if (!isNil(maxPlayer)) {
-        return maxPlayer;
+      // Tie breaker:
+      // 1) player with least cards
+      let leastCards = 1000; // very high number
+      for (const playerID of [...maxPointsPlayers]) {
+        const player = G.players[playerID];
+        let cardsCount = 0;
+        for (const key in GEM) {
+          const gem = GEM[key];
+          cardsCount += player.cards[gem];
+        }
+
+        if (cardsCount < leastCards) {
+          maxPointsPlayers = [playerID];
+          leastCards = cardsCount;
+        }
+      }
+
+      if (!isEmpty(maxPointsPlayers)) {
+        return maxPointsPlayers[0];
       } else {
         false;
       }

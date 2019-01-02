@@ -1,5 +1,6 @@
 import { GEM, YELLOW } from "./gems";
 import { reduce } from 'ramda';
+import { TIER } from "./tiers";
 
 export const calcPoints = player => {
   let total = 0;
@@ -18,9 +19,9 @@ const dealFromDeck = (G, deck) => {
 }
 
 export const dealCards = (G) => {
-  dealFromDeck(G, 'tier1');
-  dealFromDeck(G, 'tier2');
-  dealFromDeck(G, 'tier3');
+  dealFromDeck(G, TIER.ONE);
+  dealFromDeck(G, TIER.TWO);
+  dealFromDeck(G, TIER.THREE);
 }
 
 const countColor = (player, color) => player.gems[color] + player.cards[color].length;
