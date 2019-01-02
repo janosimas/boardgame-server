@@ -127,9 +127,9 @@ const Splendor = Game({
         if (temp > 0) {
           const cost = temp;
           temp -= player.gems[GEM[key]];
-          player.gems[GEM[key]] -= cost;
-          if (player.gems[GEM[key]] < 0) {
-            player.gems[GEM[key]] = 0;
+          while (player.gems[GEM[key]] != 0 && cost != 0) {
+            player.gems[GEM[key]]--;
+            G.gems[GEM[key]]++;
           }
         }
 
@@ -141,6 +141,7 @@ const Splendor = Game({
 
       if (accum > 0) {
         player.gems[YELLOW] -= accum;
+        G.gems[YELLOW] += accum;
       }
 
       player.cards[card.bonus].push(card);
