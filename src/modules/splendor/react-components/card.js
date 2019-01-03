@@ -4,6 +4,7 @@ import { TIER } from '../components/tiers';
 import { renderGem } from './gem';
 import { isNil } from 'ramda';
 import { canBuy, canReserve } from '../components/utils';
+import { PHASE } from '../components/phases';
 
 // TODO: highlight possible cards to buy
 export const renderCard = (G, ctx, playerID, card, moves, isSelected) => {
@@ -28,19 +29,35 @@ export const renderCard = (G, ctx, playerID, card, moves, isSelected) => {
       key={'cards'}
     >
       {Object.keys(GEM).map(key => card[GEM[key]] === 0 ? null :
-        <div key={key} style={{ display: "flex" }}>{renderGem(GEM[key], card[GEM[key]])}</div>)}
+        <div
+          key={key}
+          style={{ display: "flex" }}>
+          {renderGem(GEM[key], card[GEM[key]])}
+        </div>)}
     </div>
   );
 
   const style = { border: "3px solid black", margin: "5px", width: "100px" };
-  if (isSelected && ctx.currentPlayer === playerID) {
+  if (ctx.phase === PHASE.ACTION_PHASE && isSelected && ctx.currentPlayer === playerID) {
     style.border = "3px solid blue";
     if (canBuy(G.players[playerID], card)) {
-      view.push(<button key={'buy'} onClick={() => moves.buyCard()}>buy</button>);
+      view.push(
+        <button
+          key={'buy'}
+          onClick={() => moves.buyCard()}>
+          {'buy'}
+        </button>
+      );
     }
 
     if (canReserve(G, G.players[playerID])) {
-      view.push(<button key={'reserve'} onClick={() => moves.reserveCard()}>reserve</button>);
+      view.push(
+        <button
+          key={'reserve'}
+          onClick={() => moves.reserveCard()}>
+          {'reserve'}
+        </button>
+      );
     }
   }
 
@@ -56,7 +73,7 @@ export const renderCards = (G, ctx, playerID, moves, selectedCard) => {
         return <div key={key} style={{ display: "flex" }}>
           {G.cards[TIER[key]].map((card, i) => <div
             key={i}
-            onClick={() => moves.selectCard(TIER[key], i)}
+            onClick={ctx.phase === PHASE.ACTION_PHASE ? () => moves.selectCard(TIER[key], i) : null}
           >{renderCard(G, ctx, playerID, card, moves, (!isNil(selectedCard)) && selectedCard.tier === TIER[key] && selectedCard.index === i)}</div>)}
         </div>
       })}

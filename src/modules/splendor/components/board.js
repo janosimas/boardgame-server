@@ -140,8 +140,8 @@ class Board extends React.Component {
 
     return (
       <div>
-        <div>{renderHold(this.moves, this.state.gemsOnHold)}</div>
-        <div>{renderTokens(G, this.moves)}</div>
+        <div>{renderHold(G, ctx, this.moves, this.state.gemsOnHold)}</div>
+        <div>{renderTokens(G, ctx, this.moves)}</div>
         <div>{renderCards(G, ctx, playerID, this.moves, this.state.selectedCard)}</div>
         <div>{renderPlayer(G, ctx, G.players[playerID], this.moves)}</div>
         {this.props.playerID}

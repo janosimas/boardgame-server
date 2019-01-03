@@ -13,6 +13,7 @@ import { dealCards, canBuy, canReserve, calcPoints } from './components/utils';
 
 import { isNil, isEmpty, uniq } from 'ramda';
 import { TIER, RESERVE } from './components/tiers';
+import { PHASE } from './components/phases';
 
 const Splendor = Game({
   name: 'Splendor',
@@ -173,12 +174,12 @@ const Splendor = Game({
   },
 
   flow: {
-    startingPhase: 'actionPhase',
+    startingPhase: PHASE.ACTION_PHASE,
     phases: {
-      actionPhase: {
+      [PHASE.ACTION_PHASE]: {
         allowedMoves: ['clickGem', 'buyCard', 'reserveCard'],
-        next: 'endTurnPhase',
-        onTurnBegin: (G, ctx) => dealCards(G),
+        next: PHASE.END_TURN_PHASE,
+        onPhaseEnd: (G, ctx) => dealCards(G),
         onMove: (G, ctx) => ctx.events.endPhase(),
         endGameIf: (G, ctx) => {
           let maxPoints = 0;
@@ -224,8 +225,8 @@ const Splendor = Game({
           }
         },
       },
-      endTurnPhase: {
-        next: 'actionPhase',
+      [PHASE.END_TURN_PHASE]: {
+        next: PHASE.ACTION_PHASE,
         allowedMoves: ['discardExtraTokens'],
         endPhaseIf: (G, ctx) => {
           const player = G.players[ctx.currentPlayer];
