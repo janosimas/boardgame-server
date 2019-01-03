@@ -27,13 +27,13 @@ export const renderTokens = (G, ctx, moves) => {
         margin: "5px",
         display: 'flex'
       }}>
-      <Gem gem={YELLOW} gems={G.gems[YELLOW]} />
+      <Gem gem={YELLOW} tokens={G.gems[YELLOW]} />
       {Object.keys(GEM).map(gem =>
         <Gem
           key={gem}
           onClick={() => moves.selectGem(GEM[gem])}
           gem={GEM[gem]}
-          gems={G.gems[GEM[gem]]} />
+          tokens={G.gems[GEM[gem]]} />
       )}
     </div>
   );

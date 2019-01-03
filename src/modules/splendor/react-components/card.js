@@ -33,7 +33,7 @@ export const renderCard = (G, ctx, playerID, card, moves, isSelected) => {
           key={key}
           style={{ display: "flex" }}
           gem={GEM[key]}
-          gems={card[GEM[key]]}
+          tokens={card[GEM[key]]}
         />)}
     </div>
   );

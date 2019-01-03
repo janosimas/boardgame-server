@@ -19,12 +19,12 @@ export const renderPlayer = (G, ctx, player, moves) => {
           display: "flex",
           flexWrap: 'wrap'
         }}>
-          <Gem gem={YELLOW} gems={player.gems[YELLOW]} />
+          <Gem gem={YELLOW} tokens={player.gems[YELLOW]} />
           {Object.keys(GEM).map(gem =>
             <Gem
               key={gem}
               gem={GEM[gem]}
-              gems={player.gems[GEM[gem]]}
+              tokens={player.gems[GEM[gem]]}
               cards={player.cards[GEM[gem]].length}
             />
           )}
