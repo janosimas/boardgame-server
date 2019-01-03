@@ -143,9 +143,9 @@ export const cards = {
 for (const key in GEM) {
   if (GEM.hasOwnProperty(key)) {
     const gem = GEM[key];
-    cards[TIER.ONE].push(cardsByColor[gem][TIER.ONE]);
-    cards[TIER.TWO].push(cardsByColor[gem][TIER.TWO]);
-    cards[TIER.THREE].push(cardsByColor[gem][TIER.THREE]);
+    cards[TIER.ONE].push(...cardsByColor[gem][TIER.ONE]);
+    cards[TIER.TWO].push(...cardsByColor[gem][TIER.TWO]);
+    cards[TIER.THREE].push(...cardsByColor[gem][TIER.THREE]);
   }
 }
 

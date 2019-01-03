@@ -3,7 +3,7 @@ import { renderGem } from './gem';
 import { YELLOW, GEM } from '../components/gems';
 import { calcPoints } from '../components/utils';
 import { renderCard } from './card';
-import { TIER } from '../components/tiers';
+import { RESERVE } from '../components/tiers';
 import { isNil } from 'ramda';
 
 export const renderPlayer = (G, ctx, player, moves) => {
@@ -30,7 +30,7 @@ export const renderPlayer = (G, ctx, player, moves) => {
           player,
           card,
           moves,
-          (!isNil(G.selectedCard)) && G.selectedCard.tier === TIER.RESERVE && G.selectedCard.index === i
+          (!isNil(G.selectedCard)) && G.selectedCard.tier === RESERVE && G.selectedCard.index === i
         )
       )}
     </div>

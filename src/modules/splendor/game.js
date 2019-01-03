@@ -12,7 +12,7 @@ import { cards } from './components/cards';
 import { dealCards, canBuy, canReserve, calcPoints } from './components/utils';
 
 import { isNil, isEmpty, uniq } from 'ramda';
-import { TIER } from './components/tiers';
+import { TIER, RESERVE } from './components/tiers';
 
 const Splendor = Game({
   name: 'Splendor',
@@ -70,7 +70,7 @@ const Splendor = Game({
   },
 
   moves: {
-    clickGem(G, ctx, gems) {
+    clickGem: (G, ctx, gems) => {
       // cancel action if didn't select 3 gems
       if (isNil(gems)) {
         return;
@@ -98,7 +98,7 @@ const Splendor = Game({
       return G;
     },
 
-    buyCard(G, ctx, tier, pos) {
+    buyCard: (G, ctx, tier, pos) => {
       //cancel action if no tier or position
       if (isNil(tier)
         || isNil(pos)
@@ -108,11 +108,11 @@ const Splendor = Game({
       }
 
       const player = G.players[ctx.currentPlayer];
-      let card = tier === TIER.RESERVE ? player.reserved[pos] : G.cards[tier][pos];
+      let card = tier === RESERVE ? player.reserved[pos] : G.cards[tier][pos];
       if (!canBuy(player, card)) {
         return;
       }
-      tier === TIER.RESERVE ? player.reserved.splice(pos, 1) : G.cards[tier].splice(pos, 1);
+      tier === RESERVE ? player.reserved.splice(pos, 1) : G.cards[tier].splice(pos, 1);
 
       let accum = 0;
       for (const key in GEM) {
@@ -145,7 +145,7 @@ const Splendor = Game({
       return G;
     },
 
-    reserveCard(G, ctx, tier, pos) {
+    reserveCard: (G, ctx, tier, pos) => {
       //cancel action if no tier or position
       if (isNil(tier)
         || isNil(pos)
@@ -165,57 +165,78 @@ const Splendor = Game({
       player.reserved.push(card);
       player.gems[YELLOW]++;
       G.gems[YELLOW]--;
+    },
+
+    discardExtraTokens: (G, ctx, gems) => {
+      return G;
     }
   },
 
   flow: {
-    movesPerTurn: 1,
-    onTurnBegin: (G, ctx) => {
-      dealCards(G);
-    },
-    endGameIf: (G, ctx) => {
-      let maxPoints = 0;
-      let maxPointsPlayers = [];
+    startingPhase: 'actionPhase',
+    phases: {
+      actionPhase: {
+        allowedMoves: ['clickGem', 'buyCard', 'reserveCard'],
+        next: 'endTurnPhase',
+        onTurnBegin: (G, ctx) => dealCards(G),
+        onMove: (G, ctx) => ctx.events.endPhase(),
+        endGameIf: (G, ctx) => {
+          let maxPoints = 0;
+          let maxPointsPlayers = [];
 
-      // check for players with 15 or more points
-      for (const playerID in G.players) {
-        if (G.players.hasOwnProperty(playerID)) {
-          const player = G.players[playerID];
-          const points = calcPoints(player);
-          if (points >= 15) {
-            if (points > maxPoints) {
-              // player with most points
-              maxPoints = points;
-              maxPointsPlayers = [playerID];
-            } else if (points === maxPoints) {
-              // tie between players
-              maxPointsPlayers.push(playerID);
+          // check for players with 15 or more points
+          for (const playerID in G.players) {
+            if (G.players.hasOwnProperty(playerID)) {
+              const player = G.players[playerID];
+              const points = calcPoints(player);
+              if (points >= 15) {
+                if (points > maxPoints) {
+                  // player with most points
+                  maxPoints = points;
+                  maxPointsPlayers = [playerID];
+                } else if (points === maxPoints) {
+                  // tie between players
+                  maxPointsPlayers.push(playerID);
+                }
+              }
             }
           }
-        }
-      }
 
-      // Tie breaker:
-      // 1) player with least cards
-      let leastCards = 1000; // very high number
-      for (const playerID of [...maxPointsPlayers]) {
-        const player = G.players[playerID];
-        let cardsCount = 0;
-        for (const key in GEM) {
-          const gem = GEM[key];
-          cardsCount += player.cards[gem];
-        }
+          // Tie breaker:
+          // 1) player with least cards
+          let leastCards = 1000; // very high number
+          for (const playerID of [...maxPointsPlayers]) {
+            const player = G.players[playerID];
+            let cardsCount = 0;
+            for (const key in GEM) {
+              const gem = GEM[key];
+              cardsCount += player.cards[gem];
+            }
 
-        if (cardsCount < leastCards) {
-          maxPointsPlayers = [playerID];
-          leastCards = cardsCount;
-        }
-      }
+            if (cardsCount < leastCards) {
+              maxPointsPlayers = [playerID];
+              leastCards = cardsCount;
+            }
+          }
 
-      if (!isEmpty(maxPointsPlayers)) {
-        return maxPointsPlayers[0];
-      } else {
-        false;
+          if (!isEmpty(maxPointsPlayers)) {
+            return maxPointsPlayers[0];
+          }
+        },
+      },
+      endTurnPhase: {
+        next: 'actionPhase',
+        allowedMoves: ['discardExtraTokens'],
+        endPhaseIf: (G, ctx) => {
+          const player = G.players[ctx.currentPlayer];
+          let acc = 0;
+          for (const key in player.gems) {
+            acc += player.gems[key];
+          }
+
+          return acc <= 10;
+        },
+        onPhaseEnd: (G, ctx) => ctx.events.endTurn(),
       }
     },
   },

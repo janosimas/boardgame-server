@@ -19,7 +19,7 @@ export const renderHold = (moves, gemsOnHold) => {
   </div>
 }
 
-export const renderTokens = (G) => {
+export const renderTokens = (G, moves) => {
   return (
     <div
       style={{
@@ -30,7 +30,7 @@ export const renderTokens = (G) => {
       <div style={{ display: "flex" }}>{renderGem(YELLOW, G.gems[YELLOW])}</div>
       {Object.keys(GEM).map(gem => <div
         key={gem}
-        onClick={() => this.moves.selectGem(GEM[gem])}
+        onClick={() => moves.selectGem(GEM[gem])}
         style={{ display: "flex" }}>{renderGem(GEM[gem], G.gems[GEM[gem]])}</div>)}
     </div>
   );
