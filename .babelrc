@@ -1,17 +1,28 @@
 {
   "presets": [
-    ["es2015", { "modules": false }],
+    [
+      "es2015",
+      {
+        "modules": false
+      }
+    ],
     "react",
   ],
+  "sourceMaps": "inline",
+  "retainLines": true,
   "env": {
     "targets": {
       "node": "current"
     },
     "test": {
-      "plugins": ["transform-es2015-modules-commonjs"]
+      "plugins": [
+        "transform-es2015-modules-commonjs"
+      ]
     },
     "rollup": {
-      "plugins": ["external-helpers"]
+      "plugins": [
+        "external-helpers"
+      ]
     }
   },
   "plugins": [
