@@ -10,7 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './board.css';
 
-import { uniq } from 'ramda';
+import { uniq, countBy } from 'ramda';
 import { renderCards } from '../react-components/card';
 import { renderHold, renderTokens } from '../react-components/tokens';
 import { ACTION } from '../react-components/actions';
@@ -72,11 +72,33 @@ class Board extends React.Component {
         }
 
         const gemsOnHold = this.state.gemsOnHold;
-        if (this.props.G.gems[gem] === 0 // FIXME: this will allow getting 2 gems if there is only 1 in the bank
-          || uniq(gemsOnHold).length === 3
-          || (gemsOnHold.length === 2 && (gemsOnHold[0] === gemsOnHold[1] || gemsOnHold[0] === gem || gemsOnHold[1] === gem))) {
+        const count = countBy(g => g)(gemsOnHold)[gem];
+        // can't buy if there are no available tokens
+        if (this.props.G.gems[gem] - count === 0) {
           return;
         }
+        // already have 3 unique tokens
+        if (uniq(gemsOnHold).length === 3) {
+          return;
+        }
+        // can only take a second token of the same color
+        // if there were 4 or more tokens of that color
+        if (gemsOnHold.length === 1
+          && count === 1
+          && this.props.G.gems[gem] < 4) {
+          return;
+        }
+
+        // can't buy a 3rd gem if:
+        // - already have two gems of the same color
+        // - already have one gem of the selected color
+        if (gemsOnHold.length === 2
+          && (gemsOnHold[0] === gemsOnHold[1]
+            || gemsOnHold[0] === gem
+            || gemsOnHold[1] === gem)) {
+          return;
+        }
+
         gemsOnHold.push(gem);
         this.setState({ gemsOnHold });
       },
