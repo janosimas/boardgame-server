@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderGem } from './gem';
+import { Gem } from './gem';
 import { YELLOW, GEM } from '../components/gems';
 import { calcPoints } from '../components/utils';
 import { renderCard } from './card';
@@ -19,8 +19,15 @@ export const renderPlayer = (G, ctx, player, moves) => {
           display: "flex",
           flexWrap: 'wrap'
         }}>
-          {renderGem(YELLOW, player.gems[YELLOW])}
-          {Object.keys(GEM).map(gem => renderGem(GEM[gem], player.gems[GEM[gem]], player.cards[GEM[gem]].length))}
+          <Gem gem={YELLOW} gems={player.gems[YELLOW]} />
+          {Object.keys(GEM).map(gem =>
+            <Gem
+              key={gem}
+              gem={GEM[gem]}
+              gems={player.gems[GEM[gem]]}
+              cards={player.cards[GEM[gem]].length}
+            />
+          )}
         </div>
       </div>
       {player.reserved.map((card, i) =>

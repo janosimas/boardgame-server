@@ -1,7 +1,7 @@
 import React from 'react';
 import { GEM } from '../components/gems';
 import { TIER } from '../components/tiers';
-import { renderGem } from './gem';
+import { Gem } from './gem';
 import { isNil } from 'ramda';
 import { canBuy, canReserve } from '../components/utils';
 import { PHASE } from '../components/phases';
@@ -16,7 +16,7 @@ export const renderCard = (G, ctx, playerID, card, moves, isSelected) => {
   view.push(<div key={'header'} style={{
     display: "flex",
   }}>
-    {renderGem(card.bonus)}
+    <Gem gem={card.bonus} />
     {card.points}
   </div>);
 
@@ -29,11 +29,12 @@ export const renderCard = (G, ctx, playerID, card, moves, isSelected) => {
       key={'cards'}
     >
       {Object.keys(GEM).map(key => card[GEM[key]] === 0 ? null :
-        <div
+        <Gem
           key={key}
-          style={{ display: "flex" }}>
-          {renderGem(GEM[key], card[GEM[key]])}
-        </div>)}
+          style={{ display: "flex" }}
+          gem={GEM[key]}
+          gems={card[GEM[key]]}
+        />)}
     </div>
   );
 

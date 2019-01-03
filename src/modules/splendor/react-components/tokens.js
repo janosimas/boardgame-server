@@ -1,6 +1,6 @@
 import React from 'react';
 import { uniq } from 'ramda';
-import { renderGem } from './gem';
+import { Gem } from './gem';
 import { YELLOW, GEM } from '../components/gems';
 
 export const renderHold = (G, ctx, moves, gemsOnHold) => {
@@ -13,7 +13,7 @@ export const renderHold = (G, ctx, moves, gemsOnHold) => {
   return <div style={{ display: "flex" }}>
     {
       gemsOnHold.map((gem, i) =>
-        <div key={i} onClick={() => moves.removeFromHold(i)} >{renderGem(gem)}</div>)
+        <div key={i} onClick={() => moves.removeFromHold(i)} >{Gem(gem)}</div>)
     }
     {okButton}
   </div>
@@ -27,11 +27,14 @@ export const renderTokens = (G, ctx, moves) => {
         margin: "5px",
         display: 'flex'
       }}>
-      <div style={{ display: "flex" }}>{renderGem(YELLOW, G.gems[YELLOW])}</div>
-      {Object.keys(GEM).map(gem => <div
-        key={gem}
-        onClick={() => moves.selectGem(GEM[gem])}
-        style={{ display: "flex" }}>{renderGem(GEM[gem], G.gems[GEM[gem]])}</div>)}
+      <Gem gem={YELLOW} gems={G.gems[YELLOW]} />
+      {Object.keys(GEM).map(gem =>
+        <Gem
+          key={gem}
+          onClick={() => moves.selectGem(GEM[gem])}
+          gem={GEM[gem]}
+          gems={G.gems[GEM[gem]]} />
+      )}
     </div>
   );
 }
