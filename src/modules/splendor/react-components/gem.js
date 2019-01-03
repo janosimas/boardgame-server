@@ -10,10 +10,13 @@ export const Gem = (props) => <div style={{
   border: "1px solid black",
   borderRadius: 5,
   lineHeight: '30px'
-}} >{isNil(props.cards) ? props.tokens : props.cards + "/" + props.tokens}</div>;
+}}
+  onClick={props.onClick}
+>{isNil(props.cards) ? props.tokens : props.cards + "/" + props.tokens}</div>;
 
 Gem.propTypes = {
   gem: PropTypes.string.isRequired,
   tokens: PropTypes.number,
-  cards: PropTypes.number
+  cards: PropTypes.number,
+  onClick: PropTypes.func
 }

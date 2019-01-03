@@ -18,7 +18,7 @@ export const renderHold = (G, ctx, moves, gemsOnHold) => {
   return <div style={{ display: "flex" }}>
     {
       gemsOnHold.map((gem, i) =>
-        <div key={i} onClick={() => moves.removeFromHold(i)} >{Gem(gem)}</div>)
+        <Gem key={i} onClick={() => moves.removeFromHold(i)} gem={gem} />)
     }
     {okButton}
   </div>

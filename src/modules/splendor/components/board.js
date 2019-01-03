@@ -98,7 +98,7 @@ class Board extends React.Component {
 
         if (this.props.ctx.phase === PHASE.ACTION_PHASE) {
           this.props.moves.clickGem(gems);
-        } else if (this.props.ctx.phase === PHASE.ACTION_PHASE) {
+        } else if (this.props.ctx.phase === PHASE.END_TURN_PHASE) {
           this.props.moves.discardExtraTokens(gems);
         }
 
