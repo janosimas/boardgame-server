@@ -9,7 +9,7 @@
 import { Game } from 'boardgame.io/core';
 import { GEM, YELLOW } from './components/gems';
 import { cards } from './components/cards';
-import { dealCards, canBuy, canReserve, calcPoints } from './components/utils';
+import { dealCards, canBuy, canReserve, calcPoints, countGems } from './components/utils';
 
 import { isNil, isEmpty, uniq } from 'ramda';
 import { TIER, RESERVE } from './components/tiers';
@@ -95,8 +95,6 @@ const Splendor = Game({
         G.players[ctx.currentPlayer].gems[gem]++;
         G.gems[gem]--;
       });
-
-      return G;
     },
 
     buyCard: (G, ctx, tier, pos) => {
@@ -142,8 +140,6 @@ const Splendor = Game({
       }
 
       player.cards[card.bonus].push(card);
-
-      return G;
     },
 
     reserveCard: (G, ctx, tier, pos) => {
@@ -169,7 +165,21 @@ const Splendor = Game({
     },
 
     discardExtraTokens: (G, ctx, gems) => {
-      return G;
+      // cancel action if didn't select any gem
+      if (isNil(gems) || gems.length === 0) {
+        return;
+      }
+
+      const player = G.players[ctx.currentPlayer];
+      // cancel action if player doesn't have that gem
+      if (gems.some(gem => player.gems[gem] === 0)) {
+        return;
+      }
+
+      gems.forEach(gem => {
+        G.players[ctx.currentPlayer].gems[gem]--;
+        G.gems[gem]++;
+      });
     }
   },
 
@@ -228,15 +238,7 @@ const Splendor = Game({
       [PHASE.END_TURN_PHASE]: {
         next: PHASE.ACTION_PHASE,
         allowedMoves: ['discardExtraTokens'],
-        endPhaseIf: (G, ctx) => {
-          const player = G.players[ctx.currentPlayer];
-          let acc = 0;
-          for (const key in player.gems) {
-            acc += player.gems[key];
-          }
-
-          return acc <= 10;
-        },
+        endPhaseIf: (G, ctx) => countGems(G.players[ctx.currentPlayer]) <= 10,
         onPhaseEnd: (G, ctx) => ctx.events.endTurn(),
       }
     },

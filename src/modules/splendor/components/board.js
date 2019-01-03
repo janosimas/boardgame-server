@@ -15,6 +15,8 @@ import { renderCards } from '../react-components/card';
 import { renderHold, renderTokens } from '../react-components/tokens';
 import { ACTION } from '../react-components/actions';
 import { renderPlayer } from '../react-components/player';
+import { countGems } from './utils';
+import { PHASE } from './phases';
 
 class Board extends React.Component {
   static propTypes = {
@@ -41,7 +43,25 @@ class Board extends React.Component {
 
       checkAction: actionID => actionID === this.state.actionID,
 
-      selectGem: (gem) => {
+      selectGemToDiscard: (gem) => {
+        if (this.props.ctx.currentPlayer != this.props.playerID) {
+          return;
+        }
+
+        if (!this.moves.checkAction(ACTION.SELECT_GEM)) {
+          this.moves.resetActionState();
+          this.moves.registerAction(ACTION.SELECT_GEM);
+        }
+
+        const gemsOnHold = this.state.gemsOnHold;
+        if (countGems(this.props.G.players[this.props.ctx.currentPlayer]) - gemsOnHold.length <= 10) {
+          return;
+        }
+
+        gemsOnHold.push(gem);
+        this.setState({ gemsOnHold });
+      },
+      selectGemToBuy: (gem) => {
         if (this.props.ctx.currentPlayer != this.props.playerID) {
           return;
         }
@@ -76,7 +96,12 @@ class Board extends React.Component {
           return;
         }
 
-        this.props.moves.clickGem(gems);
+        if (this.props.ctx.phase === PHASE.ACTION_PHASE) {
+          this.props.moves.clickGem(gems);
+        } else if (this.props.ctx.phase === PHASE.ACTION_PHASE) {
+          this.props.moves.discardExtraTokens(gems);
+        }
+
         this.moves.resetActionState();
       },
 

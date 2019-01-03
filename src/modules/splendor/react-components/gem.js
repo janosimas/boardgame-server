@@ -10,10 +10,10 @@ export const Gem = (props) => <div style={{
   border: "1px solid black",
   borderRadius: 5,
   lineHeight: '30px'
-}} >{isNil(props.cards) ? props.gems : props.cards + "/" + props.gems}</div>;
+}} >{isNil(props.cards) ? props.tokens : props.cards + "/" + props.tokens}</div>;
 
-Gem.PropTypes = {
+Gem.propTypes = {
   gem: PropTypes.string.isRequired,
-  gems: PropTypes.number,
+  tokens: PropTypes.number,
   cards: PropTypes.number
 }

@@ -45,3 +45,11 @@ export const canBuy = (player, card) => {
 }
 
 export const canReserve = (G, player) => G.gems[YELLOW] != 0 && player.reserved.length != 3;
+
+export const countGems = player => {
+  let acc = 0;
+  for (const key in player.gems) {
+    acc += player.gems[key];
+  }
+  return acc;
+}

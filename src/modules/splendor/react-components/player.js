@@ -5,6 +5,7 @@ import { calcPoints } from '../components/utils';
 import { renderCard } from './card';
 import { RESERVE } from '../components/tiers';
 import { isNil } from 'ramda';
+import { PHASE } from '../components/phases';
 
 export const renderPlayer = (G, ctx, player, moves) => {
   const totalPoints = calcPoints(player)
@@ -26,6 +27,7 @@ export const renderPlayer = (G, ctx, player, moves) => {
               gem={GEM[gem]}
               tokens={player.gems[GEM[gem]]}
               cards={player.cards[GEM[gem]].length}
+              onClick={ctx.phase === PHASE.END_TURN_PHASE ? () => moves.selectGemToDiscard(GEM[gem]) : null}
             />
           )}
         </div>
