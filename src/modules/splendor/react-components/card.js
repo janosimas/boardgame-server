@@ -81,7 +81,8 @@ Card.propTypes = {
   isSelected: PropTypes.bool
 }
 
-export const renderCards = (G, ctx, playerID, moves, turnState) => {
+export const Cards = (props) => {
+  const { G, ctx, playerID, moves, turnState } = props;
   return (
     <div>
       {Object.keys(TIER).map(key => {
@@ -103,4 +104,12 @@ export const renderCards = (G, ctx, playerID, moves, turnState) => {
       })}
     </div>
   )
+}
+
+Cards.propTypes = {
+  G: PropTypes.object.isRequired,
+  ctx: PropTypes.object.isRequired,
+  playerID: PropTypes.number.isRequired,
+  moves: PropTypes.array.isRequired,
+  turnState: PropTypes.object.isRequired
 }

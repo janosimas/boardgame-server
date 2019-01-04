@@ -11,8 +11,8 @@ import PropTypes from 'prop-types';
 import './board.css';
 
 import { uniq, countBy } from 'ramda';
-import { renderCards } from '../react-components/card';
-import { renderHold, renderTokens, Tokens } from '../react-components/tokens';
+import { Cards } from '../react-components/card';
+import { Tokens, TokensHold } from '../react-components/tokens';
 import { ACTION } from '../react-components/actions';
 import { Player } from '../react-components/player';
 import { countGems } from './utils';
@@ -188,16 +188,30 @@ class Board extends React.Component {
 
     return (
       <div>
-        <div>{renderHold(G, ctx, this.moves, this.state.gemsOnHold)}</div>
-        <Tokens G={G} onClick={this.moves.selectGemToBuy} />
-        <div>{renderCards(G, ctx, playerID, this.moves, turnState)}</div>
+        <TokensHold
+          G={G}
+          ctx={ctx}
+          moves={this.moves}
+          gemsOnHold={this.state.gemsOnHold} />
+
+        <Tokens
+          G={G}
+          onClick={this.moves.selectGemToBuy} />
+
+        <Cards
+          G={G}
+          ctx={ctx}
+          playerID={playerID}
+          moves={this.moves}
+          turnState={turnState} />
+
         <Player
           G={G}
           ctx={ctx}
           playerID={playerID}
           moves={this.moves}
-          turnState={turnState}
-        />
+          turnState={turnState} />
+
         {this.props.playerID}
         {this.props.isConnected}
         <div>Current phase: {ctx.phase}</div>

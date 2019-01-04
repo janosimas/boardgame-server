@@ -5,7 +5,8 @@ import { Gem } from './gem';
 import { YELLOW, GEM } from '../components/gems';
 import { PHASE } from '../components/phases';
 
-export const renderHold = (G, ctx, moves, gemsOnHold) => {
+export const TokensHold = (props) => {
+  const { ctx, moves, gemsOnHold } = props;
   let okButton = null;
   if (ctx.phase === PHASE.ACTION_PHASE
     && (uniq(gemsOnHold).length === 3
@@ -23,6 +24,12 @@ export const renderHold = (G, ctx, moves, gemsOnHold) => {
     }
     {okButton}
   </div>
+}
+
+TokensHold.propTypes = {
+  ctx: PropTypes.object.isRequired,
+  moves: PropTypes.array.isRequired,
+  gemsOnHold: PropTypes.array.isRequired
 }
 
 export const Tokens = (props) => {
