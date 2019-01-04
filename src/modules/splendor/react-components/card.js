@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { GEM } from '../components/gems';
 import { TIER } from '../components/tiers';
 import { Gem } from './gem';
@@ -7,7 +8,8 @@ import { canBuy, canReserve } from '../components/utils';
 import { PHASE } from '../components/phases';
 
 // TODO: highlight possible cards to buy
-export const renderCard = (G, ctx, playerID, card, moves, isSelected) => {
+export const Card = (props) => {
+  const { G, ctx, playerID, card, isSelected, onSelect, onBuy, onReserve } = props;
   const view = [];
   if (card === undefined) {
     return;
@@ -41,21 +43,21 @@ export const renderCard = (G, ctx, playerID, card, moves, isSelected) => {
   const style = { border: "3px solid black", margin: "5px", width: "100px" };
   if (ctx.phase === PHASE.ACTION_PHASE && isSelected && ctx.currentPlayer === playerID) {
     style.border = "3px solid blue";
-    if (canBuy(G.players[playerID], card)) {
+    if (!isNil(onBuy) && canBuy(G.players[playerID], card)) {
       view.push(
         <button
           key={'buy'}
-          onClick={() => moves.buyCard()}>
+          onClick={onBuy}>
           {'buy'}
         </button>
       );
     }
 
-    if (canReserve(G, G.players[playerID])) {
+    if (!isNil(onReserve) && canReserve(G, G.players[playerID])) {
       view.push(
         <button
           key={'reserve'}
-          onClick={() => moves.reserveCard()}>
+          onClick={onReserve}>
           {'reserve'}
         </button>
       );
@@ -63,19 +65,40 @@ export const renderCard = (G, ctx, playerID, card, moves, isSelected) => {
   }
 
   return (
-    <div style={style}>{view}</div>
+    <div style={style} onClick={onSelect} >{view}</div>
   )
 }
 
-export const renderCards = (G, ctx, playerID, moves, selectedCard) => {
+Card.propTypes = {
+  G: PropTypes.object.isRequired,
+  ctx: PropTypes.object.isRequired,
+  playerID: PropTypes.any.isRequired,
+  card: PropTypes.object.isRequired,
+  moves: PropTypes.object.isRequired,
+  onSelect: PropTypes.func,
+  onBuy: PropTypes.func,
+  onReserve: PropTypes.func,
+  isSelected: PropTypes.bool
+}
+
+export const renderCards = (G, ctx, playerID, moves, turnState) => {
   return (
     <div>
       {Object.keys(TIER).map(key => {
         return <div key={key} style={{ display: "flex" }}>
-          {G.cards[TIER[key]].map((card, i) => <div
-            key={i}
-            onClick={ctx.phase === PHASE.ACTION_PHASE ? () => moves.selectCard(TIER[key], i) : null}
-          >{renderCard(G, ctx, playerID, card, moves, (!isNil(selectedCard)) && selectedCard.tier === TIER[key] && selectedCard.index === i)}</div>)}
+          {
+            G.cards[TIER[key]].map((card, i) =>
+              <Card
+                key={i} G={G}
+                ctx={ctx}
+                playerID={playerID}
+                card={card}
+                onSelect={() => moves.selectCard(TIER[key], i)}
+                onBuy={() => moves.buyCard()}
+                onReserve={() => moves.reserveCard()}
+                isSelected={(!isNil(turnState.selectedCard)) && turnState.selectedCard.tier === TIER[key] && turnState.selectedCard.index === i} />
+            )
+          }
         </div>
       })}
     </div>

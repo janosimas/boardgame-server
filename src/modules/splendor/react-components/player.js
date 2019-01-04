@@ -2,12 +2,13 @@ import React from 'react';
 import { Gem } from './gem';
 import { YELLOW, GEM } from '../components/gems';
 import { calcPoints } from '../components/utils';
-import { renderCard } from './card';
+import { Card } from './card';
 import { RESERVE } from '../components/tiers';
 import { isNil } from 'ramda';
 import { PHASE } from '../components/phases';
 
-export const renderPlayer = (G, ctx, player, moves) => {
+export const renderPlayer = (G, ctx, playerID, moves, turnState) => {
+  const player = G.players[playerID];
   const totalPoints = calcPoints(player)
 
   return (
@@ -33,14 +34,18 @@ export const renderPlayer = (G, ctx, player, moves) => {
         </div>
       </div>
       {player.reserved.map((card, i) =>
-        renderCard(
-          G,
-          ctx,
-          player,
-          card,
-          moves,
-          (!isNil(G.selectedCard)) && G.selectedCard.tier === RESERVE && G.selectedCard.index === i
-        )
+        <Card
+          key={i}
+          G={G}
+          ctx={ctx}
+          playerID={playerID}
+          card={card}
+          moves={moves}
+          onSelect={() => moves.selectCard(RESERVE, i)}
+          onBuy={() => moves.buyCard()}
+          onReserve={null}
+          isSelected={(!isNil(turnState.selectedCard)) && turnState.selectedCard.tier === RESERVE && turnState.selectedCard.index === i}
+        />
       )}
     </div>
   );
