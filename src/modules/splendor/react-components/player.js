@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Gem } from './gem';
 import { YELLOW, GEM } from '../components/gems';
 import { calcPoints } from '../components/utils';
@@ -7,7 +8,8 @@ import { RESERVE } from '../components/tiers';
 import { isNil } from 'ramda';
 import { PHASE } from '../components/phases';
 
-export const renderPlayer = (G, ctx, playerID, moves, turnState) => {
+export const Player = (props) => {
+  const { G, ctx, playerID, moves, turnState } = props;
   const player = G.players[playerID];
   const totalPoints = calcPoints(player)
 
@@ -49,4 +51,12 @@ export const renderPlayer = (G, ctx, playerID, moves, turnState) => {
       )}
     </div>
   );
+};
+
+Player.propTypes = {
+  G: PropTypes.object.isRequired,
+  ctx: PropTypes.object.isRequired,
+  playerID: PropTypes.number.isRequired,
+  moves: PropTypes.array.isRequired,
+  turnState: PropTypes.object.isRequired
 }

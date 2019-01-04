@@ -14,7 +14,7 @@ import { uniq, countBy } from 'ramda';
 import { renderCards } from '../react-components/card';
 import { renderHold, renderTokens } from '../react-components/tokens';
 import { ACTION } from '../react-components/actions';
-import { renderPlayer } from '../react-components/player';
+import { Player } from '../react-components/player';
 import { countGems } from './utils';
 import { PHASE } from './phases';
 
@@ -191,7 +191,13 @@ class Board extends React.Component {
         <div>{renderHold(G, ctx, this.moves, this.state.gemsOnHold)}</div>
         <div>{renderTokens(G, ctx, this.moves)}</div>
         <div>{renderCards(G, ctx, playerID, this.moves, turnState)}</div>
-        <div>{renderPlayer(G, ctx, playerID, this.moves, turnState)}</div>
+        <Player
+          G={G}
+          ctx={ctx}
+          playerID={playerID}
+          moves={this.moves}
+          turnState={turnState}
+        />
         {this.props.playerID}
         {this.props.isConnected}
         <div>Current phase: {ctx.phase}</div>
