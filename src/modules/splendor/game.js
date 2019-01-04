@@ -14,6 +14,7 @@ import { dealCards, canBuy, canReserve, calcPoints, countGems } from './componen
 import { isNil, isEmpty, uniq } from 'ramda';
 import { TIER, RESERVE } from './components/tiers';
 import { PHASE } from './components/phases';
+import { INVALID_MOVE } from 'boardgame.io/dist/core';
 
 const Splendor = Game({
   name: 'Splendor',
@@ -74,21 +75,21 @@ const Splendor = Game({
     clickGem: (G, ctx, gems) => {
       // cancel action if didn't select 3 gems
       if (isNil(gems)) {
-        return;
+        return INVALID_MOVE;
       }
 
       if ((gems.length === 2 && gems[0] != gems[1])
         || (gems.length === 3 && uniq(gems).length != 3)) {
-        return;
+        return INVALID_MOVE;
       }
 
       // cancel action if try to buy a golden gem
       if (gems.find(gem => gem === YELLOW)) {
-        return;
+        return INVALID_MOVE;
       }
       // cancel action if any gem is not available to buy
       if (gems.some(gem => G.gems[gem] === 0)) {
-        return;
+        return INVALID_MOVE;
       }
 
       gems.forEach(gem => {
@@ -103,13 +104,13 @@ const Splendor = Game({
         || isNil(pos)
         || pos < 0
         || pos > 3) {
-        return;
+        return INVALID_MOVE;
       }
 
       const player = G.players[ctx.currentPlayer];
       let card = tier === RESERVE ? player.reserved[pos] : G.cards[tier][pos];
       if (!canBuy(player, card)) {
-        return;
+        return INVALID_MOVE;
       }
       tier === RESERVE ? player.reserved.splice(pos, 1) : G.cards[tier].splice(pos, 1);
 
@@ -148,13 +149,13 @@ const Splendor = Game({
         || isNil(pos)
         || pos < 0
         || pos > 3) {
-        return;
+        return INVALID_MOVE;
       }
 
       const player = G.players[ctx.currentPlayer];
       // check if can reserve
       if (!canReserve(G, player)) {
-        return;
+        return INVALID_MOVE;
       }
 
       const card = G.cards[tier][pos];
@@ -167,13 +168,13 @@ const Splendor = Game({
     discardExtraTokens: (G, ctx, gems) => {
       // cancel action if didn't select any gem
       if (isNil(gems) || gems.length === 0) {
-        return;
+        return INVALID_MOVE;
       }
 
       const player = G.players[ctx.currentPlayer];
       // cancel action if player doesn't have that gem
       if (gems.some(gem => player.gems[gem] === 0)) {
-        return;
+        return INVALID_MOVE;
       }
 
       gems.forEach(gem => {
