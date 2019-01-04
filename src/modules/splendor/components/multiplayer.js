@@ -8,11 +8,11 @@
 
 import React from 'react';
 import { Client } from 'boardgame.io/react';
-import TicTacToe from '../game';
+import Splendor from '../game';
 import Board from './board';
 
 const App = Client({
-  game: TicTacToe,
+  game: Splendor,
   board: Board,
   debug: false,
   multiplayer: true,
