@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { uniq } from 'ramda';
 import { Gem } from './gem';
 import { YELLOW, GEM } from '../components/gems';
@@ -24,7 +25,8 @@ export const renderHold = (G, ctx, moves, gemsOnHold) => {
   </div>
 }
 
-export const renderTokens = (G, ctx, moves) => {
+export const Tokens = (props) => {
+  const { G, onClick } = props;
   return (
     <div
       style={{
@@ -36,10 +38,15 @@ export const renderTokens = (G, ctx, moves) => {
       {Object.keys(GEM).map(gem =>
         <Gem
           key={gem}
-          onClick={() => moves.selectGemToBuy(GEM[gem])}
+          onClick={() => onClick(GEM[gem])}
           gem={GEM[gem]}
           tokens={G.gems[GEM[gem]]} />
       )}
     </div>
   );
+}
+
+Tokens.propTypes = {
+  G: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired
 }

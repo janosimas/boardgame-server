@@ -12,7 +12,7 @@ import './board.css';
 
 import { uniq, countBy } from 'ramda';
 import { renderCards } from '../react-components/card';
-import { renderHold, renderTokens } from '../react-components/tokens';
+import { renderHold, renderTokens, Tokens } from '../react-components/tokens';
 import { ACTION } from '../react-components/actions';
 import { Player } from '../react-components/player';
 import { countGems } from './utils';
@@ -189,7 +189,7 @@ class Board extends React.Component {
     return (
       <div>
         <div>{renderHold(G, ctx, this.moves, this.state.gemsOnHold)}</div>
-        <div>{renderTokens(G, ctx, this.moves)}</div>
+        <Tokens G={G} onClick={this.moves.selectGemToBuy} />
         <div>{renderCards(G, ctx, playerID, this.moves, turnState)}</div>
         <Player
           G={G}
