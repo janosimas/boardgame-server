@@ -28,7 +28,7 @@ export const TokensHold = (props) => {
 
 TokensHold.propTypes = {
   ctx: PropTypes.object.isRequired,
-  moves: PropTypes.array.isRequired,
+  moves: PropTypes.object.isRequired,
   gemsOnHold: PropTypes.array.isRequired
 }
 

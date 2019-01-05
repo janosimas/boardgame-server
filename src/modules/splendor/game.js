@@ -15,16 +15,20 @@ import { isNil, isEmpty, uniq } from 'ramda';
 import { TIER, RESERVE } from './components/tiers';
 import { PHASE } from './components/phases';
 import { INVALID_MOVE } from 'boardgame.io/dist/core';
+import { nobles } from './components/nobles';
 
 const Splendor = Game({
   name: 'Splendor',
 
   setup: (ctx) => {
     let numOfGems = 4;
+    let numOfNobles = 3;
     if (ctx.numPlayers === 3) {
       numOfGems = 5;
+      numOfNobles = 4;
     } else if (ctx.numPlayers === 4) {
       numOfGems = 7;
+      numOfNobles = 5;
     }
 
     let G = {
@@ -42,6 +46,7 @@ const Splendor = Game({
         [TIER.TWO]: [],
         [TIER.THREE]: [],
       },
+      nobles: ctx.random.Shuffle(nobles).slice(0, numOfNobles),
       players: []
     };
 
@@ -66,7 +71,7 @@ const Splendor = Game({
       });
     }
 
-    dealCards(G);
+    dealCards(G, ctx);
 
     return G;
   },
@@ -190,7 +195,7 @@ const Splendor = Game({
       [PHASE.ACTION_PHASE]: {
         allowedMoves: ['clickGem', 'buyCard', 'reserveCard'],
         next: PHASE.END_TURN_PHASE,
-        onPhaseEnd: (G, ctx) => dealCards(G),
+        onPhaseEnd: (G, ctx) => dealCards(G, ctx),
         onMove: (G, ctx) => ctx.events.endPhase(),
         endGameIf: (G, ctx) => {
           let maxPoints = 0;

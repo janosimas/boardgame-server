@@ -17,6 +17,7 @@ import { ACTION } from '../react-components/actions';
 import { Player } from '../react-components/player';
 import { countGems } from './utils';
 import { PHASE } from './phases';
+import { Nobles } from '../react-components/noble';
 
 class Board extends React.Component {
   static propTypes = {
@@ -188,6 +189,7 @@ class Board extends React.Component {
 
     return (
       <div>
+        <Nobles nobles={G.nobles} />
         <TokensHold
           G={G}
           ctx={ctx}

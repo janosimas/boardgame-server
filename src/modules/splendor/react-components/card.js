@@ -74,7 +74,6 @@ Card.propTypes = {
   ctx: PropTypes.object.isRequired,
   playerID: PropTypes.any.isRequired,
   card: PropTypes.object.isRequired,
-  moves: PropTypes.object.isRequired,
   onSelect: PropTypes.func,
   onBuy: PropTypes.func,
   onReserve: PropTypes.func,
@@ -109,7 +108,7 @@ export const Cards = (props) => {
 Cards.propTypes = {
   G: PropTypes.object.isRequired,
   ctx: PropTypes.object.isRequired,
-  playerID: PropTypes.number.isRequired,
-  moves: PropTypes.array.isRequired,
+  playerID: PropTypes.any.isRequired,
+  moves: PropTypes.object.isRequired,
   turnState: PropTypes.object.isRequired
 }

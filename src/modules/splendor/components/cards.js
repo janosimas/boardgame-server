@@ -148,4 +148,3 @@ for (const key in GEM) {
     cards[TIER.THREE].push(...cardsByColor[gem][TIER.THREE]);
   }
 }
-

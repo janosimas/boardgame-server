@@ -18,10 +18,13 @@ const dealFromDeck = (G, deck) => {
   }
 }
 
-export const dealCards = (G) => {
-  dealFromDeck(G, TIER.ONE);
-  dealFromDeck(G, TIER.TWO);
-  dealFromDeck(G, TIER.THREE);
+export const dealCards = (G, ctx) => {
+  for (const tier in TIER) {
+    if (TIER.hasOwnProperty(tier)) {
+      G.decks[TIER[tier]] = ctx.random.Shuffle(G.decks[TIER[tier]])
+      dealFromDeck(G, TIER[tier]);
+    }
+  }
 }
 
 const countColor = (player, color) => player.gems[color] + player.cards[color].length;
