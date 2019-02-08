@@ -34,6 +34,7 @@ TokensHold.propTypes = {
 
 export const Tokens = (props) => {
   const { G, onClick } = props;
+
   return (
     <div
       style={{
@@ -45,7 +46,7 @@ export const Tokens = (props) => {
       {Object.keys(GEM).map(gem =>
         <Gem
           key={gem}
-          onClick={() => onClick(GEM[gem])}
+          onClick={G.gems[GEM[gem]] > 0 ? () => onClick(GEM[gem]) : undefined}
           gem={GEM[gem]}
           tokens={G.gems[GEM[gem]]} />
       )}
