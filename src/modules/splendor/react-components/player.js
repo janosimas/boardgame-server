@@ -30,7 +30,7 @@ export const Player = (props) => {
               gem={GEM[gem]}
               tokens={player.gems[GEM[gem]]}
               cards={player.cards[GEM[gem]].length}
-              onClick={ctx.phase === PHASE.END_TURN_PHASE ? () => moves.selectGemToDiscard(GEM[gem]) : null}
+              onClick={ctx.phase === PHASE.DISCARD_TOKENS_PHASE ? () => moves.selectGemToDiscard(GEM[gem]) : null}
             />
           )}
         </div>

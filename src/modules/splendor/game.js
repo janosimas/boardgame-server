@@ -67,7 +67,9 @@ const Splendor = Game({
           [GEM.WHITE]: [],
           [GEM.BLACK]: []
         },
-        reserved: []
+        reserved: [],
+        nobles: [],
+        matchNobles: []
       });
     }
 
@@ -186,6 +188,13 @@ const Splendor = Game({
         G.players[ctx.currentPlayer].gems[gem]--;
         G.gems[gem]++;
       });
+    },
+    selectNoble: (G, ctx, index) => {
+      // TODO: add sanity check
+      const player = G.players[ctx.currentPlayer];
+      player.nobles.push(player.matchNobles[index]);
+      player.matchNobles = undefined;
+      G.nobles.splice(index, 1);
     }
   },
 
@@ -194,7 +203,7 @@ const Splendor = Game({
     phases: {
       [PHASE.ACTION_PHASE]: {
         allowedMoves: ['clickGem', 'buyCard', 'reserveCard'],
-        next: PHASE.END_TURN_PHASE,
+        next: PHASE.SELECT_NOBLE_PHASE,
         onPhaseEnd: (G, ctx) => dealCards(G, ctx),
         onMove: (G, ctx) => ctx.events.endPhase(),
         endGameIf: (G, ctx) => {
@@ -241,7 +250,28 @@ const Splendor = Game({
           }
         },
       },
-      [PHASE.END_TURN_PHASE]: {
+      [PHASE.SELECT_NOBLE_PHASE]: {
+        next: PHASE.DISCARD_TOKENS_PHASE,
+        allowedMoves: ['selectNoble'],
+        onPhaseBegin: (G, ctx) => {
+          const player = G.players[ctx.currentPlayer];
+          if (isNil(player.matchNobles)) {
+            return;
+          }
+
+          if (player.matchNobles.length === 1) {
+            // if only one noble match
+            // - save it to player
+            // - clear list
+            // - remove from game pool
+            player.nobles.push(player.matchNobles[0]);
+            player.matchNobles = undefined;
+            G.nobles.pop();
+          }
+        },
+        endPhaseIf: (G, ctx) => isNil(G.players[ctx.currentPlayer].matchNobles),
+      },
+      [PHASE.DISCARD_TOKENS_PHASE]: {
         next: PHASE.ACTION_PHASE,
         allowedMoves: ['discardExtraTokens'],
         endPhaseIf: (G, ctx) => countGems(G.players[ctx.currentPlayer]) <= 10,

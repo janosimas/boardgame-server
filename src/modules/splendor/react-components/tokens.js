@@ -12,7 +12,7 @@ export const TokensHold = (props) => {
     && (uniq(gemsOnHold).length === 3
       || (gemsOnHold.length === 2 && gemsOnHold[0] === gemsOnHold[1]))) {
     okButton = <button onClick={() => moves.finishSelectingGems(gemsOnHold)}>{"ok"}</button>;
-  } else if (ctx.phase === PHASE.END_TURN_PHASE
+  } else if (ctx.phase === PHASE.DISCARD_TOKENS_PHASE
     && gemsOnHold.length > 0) {
     okButton = <button onClick={() => moves.finishSelectingGems(gemsOnHold)}>{"ok"}</button>;
   }

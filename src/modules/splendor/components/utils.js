@@ -5,6 +5,7 @@ import { TIER } from "./tiers";
 export const calcPoints = player => {
   let total = 0;
   Object.keys(GEM).map(gem => total += reduce((acc, c) => acc + c.points, 0, player.cards[GEM[gem]]));
+  // reduce()
   return total;
 }
 
