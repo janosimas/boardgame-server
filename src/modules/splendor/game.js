@@ -193,7 +193,7 @@ const Splendor = Game({
       // TODO: add sanity check
       const player = G.players[ctx.currentPlayer];
       player.nobles.push(player.matchNobles[index]);
-      player.matchNobles = undefined;
+      player.matchNobles = [];
       G.nobles.splice(index, 1);
     }
   },
@@ -255,7 +255,7 @@ const Splendor = Game({
         allowedMoves: ['selectNoble'],
         onPhaseBegin: (G, ctx) => {
           const player = G.players[ctx.currentPlayer];
-          if (isNil(player.matchNobles)) {
+          if (isEmpty(player.matchNobles)) {
             return;
           }
 
@@ -265,11 +265,11 @@ const Splendor = Game({
             // - clear list
             // - remove from game pool
             player.nobles.push(player.matchNobles[0]);
-            player.matchNobles = undefined;
+            player.matchNobles = [];
             G.nobles.pop();
           }
         },
-        endPhaseIf: (G, ctx) => isNil(G.players[ctx.currentPlayer].matchNobles),
+        endPhaseIf: (G, ctx) => isEmpty(G.players[ctx.currentPlayer].matchNobles),
       },
       [PHASE.DISCARD_TOKENS_PHASE]: {
         next: PHASE.ACTION_PHASE,
