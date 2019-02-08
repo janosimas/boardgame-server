@@ -189,6 +189,13 @@ class Board extends React.Component {
 
     return (
       <div>
+        <Player
+          G={G}
+          ctx={ctx}
+          playerID={playerID}
+          moves={this.moves}
+          turnState={turnState} />
+
         <Nobles nobles={G.nobles} />
         <TokensHold
           G={G}
@@ -206,17 +213,6 @@ class Board extends React.Component {
           playerID={playerID}
           moves={this.moves}
           turnState={turnState} />
-
-        <Player
-          G={G}
-          ctx={ctx}
-          playerID={playerID}
-          moves={this.moves}
-          turnState={turnState} />
-
-        {this.props.playerID}
-        {this.props.isConnected}
-        <div>Current phase: {ctx.phase}</div>
       </div>
     );
   }
