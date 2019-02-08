@@ -6,13 +6,18 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import Multiplayer from './components/multiplayer';
+import {Player1, Player2} from './components/multiplayer';
 
 const routes = [
   {
-    path: '/splendor/multiplayer',
-    text: 'Multiplayer',
-    component: Multiplayer,
+    path: '/splendor/player1',
+    text: 'Player1',
+    component: Player1,
+  },
+  {
+    path: '/splendor/player2',
+    text: 'Player2',
+    component: Player2,
   },
 ];
 

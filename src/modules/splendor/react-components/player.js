@@ -13,11 +13,12 @@ export const Player = (props) => {
   const player = G.players[playerID];
   const totalPoints = calcPoints(player)
 
+  const color = playerID === ctx.currentPlayer ? "purple" : "red";
+
   return (
-    <div style={{
-      display: "flex"
-    }}>
-      <div style={{ border: "3px solid red", margin: "5px", width: "100px" }}>
+    <div>
+      <div>Current phase: {ctx.phase}</div>
+      <div style={{ border: "3px solid " + color, margin: "5px", width: "100px" }}>
         <div>{"Points: " + totalPoints}</div>
         <div style={{
           display: "flex",
