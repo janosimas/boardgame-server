@@ -69,18 +69,18 @@
             "examples": ["Zeit"],
             "pattern": "^(.*)$"
           },
-          "search.aid": {
-            "$id": "#/properties/words/items/properties/search.aid",
+          "search_aid": {
+            "$id": "#/properties/words/items/properties/search_aid",
             "type": "object",
             "title": "Aid for finding specific contents",
             "properties": {
               "translation": {
-                "$id": "#/properties/words/items/properties/search.aid/properties/translation",
+                "$id": "#/properties/words/items/properties/search_aid/properties/translation",
                 "type": "string",
                 "title": "Helper string for translations"
               },
               "image": {
-                "$id": "#/properties/words/items/properties/search.aid/properties/image",
+                "$id": "#/properties/words/items/properties/search_aid/properties/image",
                 "type": "string",
                 "title": "Helper string for images"
               }
