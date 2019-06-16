@@ -35,6 +35,8 @@ class Board extends React.Component {
 
     return (
       <div>
+        <div>{G.currentContext.word}</div>
+        <div>{G.currentContext.translations.map((word) => (<div key={word}>{word}</div>))}</div>
       </div>
     );
   }

@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import {Player1, Player2} from './components/multiplayer';
+import {Player1, Player2} from './react-components/multiplayer';
 
 const routes = [
   {
