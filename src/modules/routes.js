@@ -8,7 +8,7 @@
 
 import tic_tac_toe from './tic-tac-toe';
 import splendor from './splendor';
-
+import LanguageGame from './language-game';
 
 const routes = [
   {
@@ -18,6 +18,10 @@ const routes = [
   {
     name: 'Splendor',
     routes: splendor.routes,
+  },
+  {
+    name: 'Language game',
+    routes: LanguageGame.routes,
   }
 ];
 

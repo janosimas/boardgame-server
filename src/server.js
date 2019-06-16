@@ -14,12 +14,13 @@ import WebpackConfig from './webpack.dev.js';
 import { Server } from 'boardgame.io/server';
 import TicTacToe from './modules/tic-tac-toe/game';
 import Splendor from './modules/splendor/game';
+import LanguageGame from './modules/language-game/game';
 
 const PORT = process.env.PORT || 8000;
 const DEV = process.env.NODE_ENV === 'development';
 const PROD = !DEV;
 
-const server = Server({ games: [TicTacToe, Splendor] });
+const server = Server({ games: [TicTacToe, Splendor, LanguageGame] });
 
 if (DEV) {
   server.app.use(

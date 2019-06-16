@@ -1,0 +1,94 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": ["language", "description", "source", "words"],
+  "properties": {
+    "language": {
+      "$id": "#/properties/language",
+      "type": "string",
+      "title": "The Language code",
+      "default": "",
+      "examples": ["en"],
+      "pattern": "^(.*)$"
+    },
+    "country": {
+      "$id": "#/properties/country",
+      "type": "string",
+      "title": "The Country code",
+      "default": "",
+      "examples": ["us"],
+      "pattern": "^(.*)$"
+    },
+    "description": {
+      "$id": "#/properties/description",
+      "type": "string",
+      "title": "The Description of the file",
+      "default": "",
+      "examples": ["List of most frequent nouns in german."],
+      "pattern": "^(.*)$"
+    },
+    "source": {
+      "$id": "#/properties/source",
+      "type": "string",
+      "title": "Original source of the content",
+      "default": "",
+      "pattern": "^(.*)$"
+    },
+    "words": {
+      "$id": "#/properties/words",
+      "type": "array",
+      "title": "List of words",
+      "default": null,
+      "items": {
+        "$id": "#/properties/words/items",
+        "type": "object",
+        "properties": {
+          "prefix": {
+            "$id": "#/properties/words/items/properties/prefix",
+            "type": "string",
+            "title": "Prefix used for the word",
+            "default": "",
+            "examples": ["Die"],
+            "pattern": "^(.*)$"
+          },
+          "sufix": {
+            "$id": "#/properties/words/items/properties/sufix",
+            "type": "string",
+            "title": "Sufix used for the word",
+            "default": "",
+            "pattern": "^(.*)$"
+          },
+          "word": {
+            "$id": "#/properties/words/items/properties/word",
+            "type": "string",
+            "title": "The word or expression",
+            "default": "",
+            "examples": ["Zeit"],
+            "pattern": "^(.*)$"
+          },
+          "search.aid": {
+            "$id": "#/properties/words/items/properties/search.aid",
+            "type": "object",
+            "title": "Aid for finding specific contents",
+            "properties": {
+              "translation": {
+                "$id": "#/properties/words/items/properties/search.aid/properties/translation",
+                "type": "string",
+                "title": "Helper string for translations"
+              },
+              "image": {
+                "$id": "#/properties/words/items/properties/search.aid/properties/image",
+                "type": "string",
+                "title": "Helper string for images"
+              }
+            }
+          }
+        },
+        "required": ["word"]
+      }
+    }
+  }
+}
