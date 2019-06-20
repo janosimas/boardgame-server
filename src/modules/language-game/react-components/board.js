@@ -3,6 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './board.css';
 
+import {OptionsComponent } from './translation';
+import {HintBlock } from './hint';
+
 class Board extends React.Component {
   static propTypes = {
     G: PropTypes.any.isRequired,
@@ -35,8 +38,9 @@ class Board extends React.Component {
 
     return (
       <div>
-        <div>{G.currentContext.word}</div>
-        <div>{G.currentContext.translations.map((word) => (<div key={word}>{word}</div>))}</div>
+        <h1>{G.currentContext.word}</h1>
+        <HintBlock options={G.currentContext.translations}/>
+        <OptionsComponent options={G.currentContext.translations}/>
       </div>
     );
   }
