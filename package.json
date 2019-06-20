@@ -46,10 +46,12 @@
   "dependencies": {
     "@koa/cors": "^2.2.1",
     "chess.js": "^0.10.2",
+    "dotenv": "^8.0.0",
     "koa": "^2.5.1",
     "koa-body": "^2.5.0",
     "koa-router": "^7.2.1",
-    "koa-socket-2": "^1.0.17"
+    "koa-socket-2": "^1.0.17",
+    "sync-request": "^6.1.0"
   },
   "peerDependencies": {
     "react": "^16.3.0"

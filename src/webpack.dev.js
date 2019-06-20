@@ -6,61 +6,63 @@
  * https://opensource.org/licenses/MIT.
  */
 
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const OpenBrowserPlugin = require('open-browser-webpack-plugin');
+const path = require("path");
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const OpenBrowserPlugin = require("open-browser-webpack-plugin");
 
 const port = process.env.PORT || 8000;
-const env = process.env.NODE_ENV
+const env = process.env.NODE_ENV;
 
 module.exports = {
-  entry: ['webpack-hot-middleware/client', path.resolve(__dirname, 'index.js')],
-  mode: env || 'development',
+  entry: ["webpack-hot-middleware/client", path.resolve(__dirname, "index.js")],
+  mode: env || "development",
 
   output: {
-    publicPath: '/',
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, '../dist'),
+    publicPath: "/",
+    filename: "bundle.js",
+    path: path.resolve(__dirname, "../dist")
   },
 
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, './index.html'),
+      template: path.resolve(__dirname, "./index.html")
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new OpenBrowserPlugin({ url: `http://localhost:${port}/` }),
+    new OpenBrowserPlugin({ url: `http://localhost:${port}/` })
   ],
-
+  node: {
+    fs: "empty"
+  },
   module: {
     rules: [
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
+        loader: "babel-loader",
         query: {
-          presets: ['react', 'es2015', 'stage-0'],
-        },
+          presets: ["react", "es2015", "stage-0"]
+        }
       },
       {
         test: /\.css$/,
         exclude: /node_modules/,
-        loaders: ['style-loader', 'css-loader'],
+        loaders: ["style-loader", "css-loader"]
       },
       {
         test: /\.svg$/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: "babel-loader"
           },
           {
-            loader: 'react-svg-loader',
+            loader: "react-svg-loader",
             options: {
-              jsx: true, // true outputs JSX tags
-            },
-          },
-        ],
-      },
-    ],
-  },
+              jsx: true // true outputs JSX tags
+            }
+          }
+        ]
+      }
+    ]
+  }
 };

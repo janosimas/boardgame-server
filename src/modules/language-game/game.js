@@ -13,22 +13,45 @@ import { isNil, isEmpty, uniq, contains, map } from "ramda";
 
 import { default as german } from "./languages/de-de.js";
 
+import request from 'sync-request';
+import dotenv from 'dotenv';
+dotenv.config();
+
 const getImages = word => {
-  const imageSearchString = isNil(word.search_aid.image) ? word : word.search_aid.image
+  const imageSearchString = (isNil(word.search_aid) || isNil(word.search_aid.image))
+    ? word
+    : word.search_aid.image;
   return imageSearchString;
 };
 
 const getTranslation = word => {
-  return word;
+  const requestOptions = {
+    key:process.env.YANDEX_KEY ,
+    lang: 'de-en',
+    format: 'plain',
+    text: word
+  };
+
+  let requestUrl = 'https://translate.yandex.net/api/v1.5/tr.json/translate?';
+  for (const key in requestOptions) {
+    const element = requestOptions[key];
+    requestUrl += key + "=" + element + "&";
+  }
+
+  var res = request("GET", requestUrl);
+  console.log(res.getBody());
+  var body = JSON.parse(res.getBody("utf8"));
+
+  return body.text;
 };
 
 const getCompleteTextFromWord = item => {
   let completeText = "";
-  if (!isNil(item.prefix)) completeText += item.prefix + ' ';
+  if (!isNil(item.prefix)) completeText += item.prefix + " ";
 
   completeText += item.word;
 
-  if (!isNil(item.sufix)) completeText += ' ' + item.sufix;
+  if (!isNil(item.sufix)) completeText += " " + item.sufix;
 
   return completeText;
 };
@@ -70,7 +93,7 @@ const LanguageGame = Game({
 
       const currentWordItem = G.secret.words[currentWordIndex];
       G.currentContext = {
-        word: getCompleteTextFromWord(),
+        word: getCompleteTextFromWord(currentWordItem),
         translations: []
       };
 
@@ -79,10 +102,10 @@ const LanguageGame = Game({
         indexOfWordsToTranslate
       );
 
+      G.secret.currentContext = {};
       G.currentContext.translations = map(getTranslation, wordsToTranslate);
 
       G.secret.currentContext.images = getImages(currentWordItem);
-      G.secret.currentContext.revealed_images = [false, false, false, false];
       G.currentContext.revealed_images = [null, null, null, null];
     },
     onTurnEnd: (G, ctx) => {
