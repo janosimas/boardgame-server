@@ -13,33 +13,49 @@ import { isNil, isEmpty, uniq, contains, map } from "ramda";
 
 import { default as german } from "./languages/de-de.js";
 
-import request from 'sync-request';
-import dotenv from 'dotenv';
+import request from "sync-request";
+import dotenv from "dotenv";
 dotenv.config();
 
-const getImages = word => {
-  const imageSearchString = (isNil(word.search_aid) || isNil(word.search_aid.image))
-    ? word
-    : word.search_aid.image;
-  return imageSearchString;
-};
+const getImages = wordItem => {
+  const imageSearchString =
+    isNil(wordItem.search_aid) || isNil(wordItem.search_aid.image)
+      ? wordItem.word
+      : wordItem.search_aid.image;
 
-const getTranslation = word => {
   const requestOptions = {
-    key:process.env.YANDEX_KEY ,
-    lang: 'de-en',
-    format: 'plain',
-    text: word
+    key: process.env.PIXABAY_KEY,
+    per_page: 4,
+    q: imageSearchString
   };
 
-  let requestUrl = 'https://translate.yandex.net/api/v1.5/tr.json/translate?';
+  let requestUrl = "https://pixabay.com/api/?";
   for (const key in requestOptions) {
     const element = requestOptions[key];
     requestUrl += key + "=" + element + "&";
   }
 
   var res = request("GET", requestUrl);
-  console.log(res.getBody());
+  var body = JSON.parse(res.getBody("utf8"));
+
+  return body.hits.map(obj => obj.webformatURL);
+};
+
+const getTranslation = word => {
+  const requestOptions = {
+    key: process.env.YANDEX_KEY,
+    lang: "de-en",
+    format: "plain",
+    text: word
+  };
+
+  let requestUrl = "https://translate.yandex.net/api/v1.5/tr.json/translate?";
+  for (const key in requestOptions) {
+    const element = requestOptions[key];
+    requestUrl += key + "=" + element + "&";
+  }
+
+  var res = request("GET", requestUrl);
   var body = JSON.parse(res.getBody("utf8"));
 
   return body.text;
@@ -106,7 +122,8 @@ const LanguageGame = Game({
       G.currentContext.translations = map(getTranslation, wordsToTranslate);
 
       G.secret.currentContext.images = getImages(currentWordItem);
-      G.currentContext.revealed_images = [null, null, null, null];
+      G.currentContext.revealed_images = G.secret.currentContext.images;
+      // G.currentContext.revealed_images = [null, null, null, null];
     },
     onTurnEnd: (G, ctx) => {
       G.currentContext = undefined;

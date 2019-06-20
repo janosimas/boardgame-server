@@ -39,7 +39,7 @@ class Board extends React.Component {
     return (
       <div>
         <h1>{G.currentContext.word}</h1>
-        <HintBlock options={G.currentContext.translations}/>
+        <HintBlock options={G.currentContext.revealed_images}/>
         <OptionsComponent options={G.currentContext.translations}/>
       </div>
     );
