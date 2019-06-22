@@ -9,45 +9,58 @@
 import { Game } from "boardgame.io/core";
 import { INVALID_MOVE } from "boardgame.io/dist/core";
 
-import { isNil, isEmpty, uniq, contains, map, indexOf } from "ramda";
+import { contains, map, indexOf } from "ramda";
 
 import { default as german } from "./languages/de-de.js";
 
-import { getTranslation, getImages } from "./components/requests";
+import { getTranslation } from "./components/getTranslation";
+import { getImages } from "./components/getImages";
+import { getCompleteTextFromWord } from "./components/getCompleteTextFromWord";
+import { getPoints } from "./components/getPoints";
+
+import { TRANSLATION_OPTIONS, SOURCE_LANGUAGE, DESTIN_LANGUAGE, IMAGE_OPTIONS } from "./components/gameOptions";
 
 import dotenv from "dotenv";
 dotenv.config();
-
-const getCompleteTextFromWord = item => {
-  let completeText = "";
-  if (!isNil(item.prefix)) completeText += item.prefix + " ";
-
-  completeText += item.word;
-
-  if (!isNil(item.sufix)) completeText += " " + item.sufix;
-
-  return completeText;
-};
 
 const LanguageGame = Game({
   name: "LanguageGame",
 
   setup: ctx => {
-    let G = {
+    const G = {
       secret: {
         words: ctx.random.Shuffle([...german.words])
       }
     };
+
+    G.players = [];
+    for (let index = 0; index < ctx.numPlayers; index++) {
+      G.players.push({
+        points: 0
+      });
+    }
     return G;
   },
 
   moves: {
     selectTranslation: (G, ctx, selected_option) => {
+      if(selected_option < 0 || selected_option > TRANSLATION_OPTIONS)
+        return INVALID_MOVE;
+
       if(selected_option === G.secret.currentContext.right_option)
-        ctx.events.endTurn();
+      {
+        const player = G.players[ctx.currentPlayer];
+        player.points += getPoints(G, ctx);
+      }
+
+      ctx.events.endTurn();
     },
 
-    selectPictureToShow: (G, ctx) => {}
+    selectPictureToShow: (G, ctx, selected_card) => {
+      if(selected_card < 0 || selected_card > IMAGE_OPTIONS)
+        return INVALID_MOVE;
+
+    }
   },
   flow: {
     onTurnBegin: (G, ctx) => {
@@ -56,7 +69,7 @@ const LanguageGame = Game({
         10
       );
       let indexOfWordsToTranslate = [currentWordIndex];
-      for (let i = 0; i < 4; ++i) {
+      for (let i = 0; i < TRANSLATION_OPTIONS; ++i) {
         for (;;) {
           // get random words different from the target word
           let index = parseInt(ctx.random.Number() * G.secret.words.length, 10);
@@ -83,7 +96,7 @@ const LanguageGame = Game({
         indexOfWordsToTranslate
       );
 
-      G.currentContext.translations = map(getTranslation, wordsToTranslate);
+      G.currentContext.translations = map((word) => getTranslation(word, SOURCE_LANGUAGE, DESTIN_LANGUAGE), wordsToTranslate);
 
       G.secret.currentContext.images = getImages(currentWordItem);
       G.currentContext.revealed_images = G.secret.currentContext.images;
@@ -93,8 +106,11 @@ const LanguageGame = Game({
       G.currentContext = undefined;
       G.secret.currentContext = undefined;
     },
-    onMove: (G, ctx) => {},
-    endGameIf: (G, ctx) => {}
+    endGameIf: (G, ctx) => {
+      const player = G.players[ctx.currentPlayer];
+      if(player.points >= 10)
+        return ctx.currentPlayer;
+    }
   }
 });
 
