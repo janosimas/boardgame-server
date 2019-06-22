@@ -1311,7 +1311,7 @@ export default {
     {"prefix": "Der", "word": "Anwalt"},
     {"prefix": "Der", "word": "Liebling"},
     {"prefix": "Die", "word": "Diskussion"},
-    {"prefix": "–", "word": "Atmosphäre"},
+    {"prefix": "Die", "word": "Atmosphäre"},
     {"prefix": "Die", "word": "Leistung"},
     {"prefix": "Die", "word": "Spannung"},
     {"prefix": "Der", "word": "Text"},
