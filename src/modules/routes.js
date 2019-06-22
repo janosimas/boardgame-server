@@ -7,17 +7,12 @@
  */
 
 import tic_tac_toe from './tic-tac-toe';
-import splendor from './splendor';
 import LanguageGame from './language-game';
 
 const routes = [
   {
     name: 'Tic-Tac-Toe',
     routes: tic_tac_toe.routes,
-  },
-  {
-    name: 'Splendor',
-    routes: splendor.routes,
   },
   {
     name: 'Language game',
