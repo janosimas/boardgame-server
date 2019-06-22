@@ -2,8 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./board.css";
 
+import { isNil } from "ramda";
+
 import { OptionsComponent } from "./translation";
 import { HintBlock } from "./hint";
+import { PHASE } from "../components/phase";
 
 class Board extends React.Component {
   static propTypes = {
@@ -25,6 +28,10 @@ class Board extends React.Component {
       this.props.moves.selectTranslation(selectedTranslationIndex);
     };
 
+    this.takeHint = selectedHintIndex => {
+      this.props.moves.takeHint(selectedHintIndex);
+    };
+
     this.selectPictureToShow = () => {};
   }
 
@@ -32,18 +39,50 @@ class Board extends React.Component {
     const G = this.props.G;
     const ctx = this.props.ctx;
     const playerID = this.props.playerID;
-    const turnState = this.state;
+    if(!isNil(ctx.gameover))
+    {
+      return(
+        <div>
+          <h1>We have a winner!!!</h1>
+          <div>Winner: {ctx.gameover}</div>
+        </div>
+      )
+    }
 
-    return (
-      <div>
-        <h1>{G.currentContext.word}</h1>
-        <HintBlock options={G.currentContext.revealed_images} />
-        <OptionsComponent
-          options={G.currentContext.translations}
-          onclick={this.selectTranslation}
-        />
-      </div>
-    );
+    if (ctx.phase === PHASE.ACTION_PHASE) {
+      return (
+        <div>
+          <h1>{G.currentContext.word}</h1>
+          <HintBlock
+            options={G.currentContext.revealed_images}
+            onTakeHint={this.takeHint}
+          />
+          <OptionsComponent
+            options={G.currentContext.translations}
+            onSelectTranslation={this.selectTranslation}
+          />
+        </div>
+      );
+    } else {
+      let state;
+      if (G.currentContext.points === 0) {
+        state = <div>{"Wrong answer! :-("}</div>;
+      } else {
+        state = (
+          <div>
+            <div>{"Correct!"}</div>
+            <div>{"You got " + G.currentContext.points}</div>
+          </div>
+        );
+      }
+      return (
+        <div>
+          <h1>Player: {playerID}</h1>
+          {state}
+          <button onClick={() => this.props.moves.endTurn()}>OK</button>
+        </div>
+      );
+    }
   }
 }
 

@@ -1,12 +1,16 @@
 import React from "react";
+import { isNil } from "ramda";
 
 export const OptionsComponent = props => {
+  if(isNil(props.options))
+    return null;
+
   const list = props.options.map((translation, index) => (
     <TranslationOption
       key={index}
       index={index}
       translation={translation}
-      onclick={props.onclick}
+      onSelectTranslation={props.onSelectTranslation}
     />
   ));
   return (
@@ -23,7 +27,7 @@ export const OptionsComponent = props => {
 
 export const TranslationOption = props => {
   return (
-    <button onClick={() => props.onclick(props.index)}>
+    <button onClick={() => props.onSelectTranslation(props.index)}>
       {props.translation}
     </button>
   );
