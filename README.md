@@ -1,8 +1,10 @@
-# boardgame-server
-Simple server for boardgame.io games.
+# Language Game (boardgame-server)
+A simple language game where you try to translate words using images as hints.
 
-To add a new game:
- - create a new module
- - add a route in `src/modules/routes.js`.
- - add your game to `src/server.js`
+# How to try
 
+Once you get `nodejs` installed, download the code and run:
+```
+npm install
+npm start
+```
