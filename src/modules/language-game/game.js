@@ -9,7 +9,7 @@
 import { Game } from "boardgame.io/core";
 import { INVALID_MOVE } from "boardgame.io/dist/core";
 
-import { isNil, isEmpty, uniq, contains, map } from "ramda";
+import { isNil, isEmpty, uniq, contains, map, indexOf } from "ramda";
 
 import { default as german } from "./languages/de-de.js";
 
@@ -42,7 +42,10 @@ const LanguageGame = Game({
   },
 
   moves: {
-    selectTranslation: (G, ctx) => {},
+    selectTranslation: (G, ctx, selected_option) => {
+      if(selected_option === G.secret.currentContext.right_option)
+        ctx.events.endTurn();
+    },
 
     selectPictureToShow: (G, ctx) => {}
   },
@@ -52,7 +55,7 @@ const LanguageGame = Game({
         ctx.random.Number() * G.secret.words.length,
         10
       );
-      const indexOfWordsToTranslate = [currentWordIndex];
+      let indexOfWordsToTranslate = [currentWordIndex];
       for (let i = 0; i < 4; ++i) {
         for (;;) {
           // get random words different from the target word
@@ -63,6 +66,7 @@ const LanguageGame = Game({
           }
         }
       }
+      indexOfWordsToTranslate = ctx.random.Shuffle(indexOfWordsToTranslate);
 
       const currentWordItem = G.secret.words[currentWordIndex];
       G.currentContext = {
@@ -70,12 +74,15 @@ const LanguageGame = Game({
         translations: []
       };
 
+      G.secret.currentContext = {
+        right_option: indexOf(currentWordIndex, indexOfWordsToTranslate)
+      };
+
       const wordsToTranslate = map(
         index => G.secret.words[index].word,
         indexOfWordsToTranslate
       );
 
-      G.secret.currentContext = {};
       G.currentContext.translations = map(getTranslation, wordsToTranslate);
 
       G.secret.currentContext.images = getImages(currentWordItem);

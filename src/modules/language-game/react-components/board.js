@@ -1,10 +1,9 @@
+import React from "react";
+import PropTypes from "prop-types";
+import "./board.css";
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import './board.css';
-
-import {OptionsComponent } from './translation';
-import {HintBlock } from './hint';
+import { OptionsComponent } from "./translation";
+import { HintBlock } from "./hint";
 
 class Board extends React.Component {
   static propTypes = {
@@ -14,20 +13,19 @@ class Board extends React.Component {
     playerID: PropTypes.string,
     isActive: PropTypes.bool,
     isMultiplayer: PropTypes.bool,
-    isConnected: PropTypes.bool,
+    isConnected: PropTypes.bool
   };
 
   constructor(props) {
     super(props);
 
-    this.state = {
+    this.state = {};
+
+    this.selectTranslation = selectedTranslationIndex => {
+      this.props.moves.selectTranslation(selectedTranslationIndex);
     };
 
-    this.moves = {
-
-      selectTranslation: () => {},
-      selectPictureToShow: () => {},
-    }
+    this.selectPictureToShow = () => {};
   }
 
   render() {
@@ -39,8 +37,11 @@ class Board extends React.Component {
     return (
       <div>
         <h1>{G.currentContext.word}</h1>
-        <HintBlock options={G.currentContext.revealed_images}/>
-        <OptionsComponent options={G.currentContext.translations}/>
+        <HintBlock options={G.currentContext.revealed_images} />
+        <OptionsComponent
+          options={G.currentContext.translations}
+          onclick={this.selectTranslation}
+        />
       </div>
     );
   }
