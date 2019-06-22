@@ -1,4 +1,4 @@
 export const PHASE = {
-  ACTION_PHASE: 1,
-  POINTS_PHASE: 2
+  ACTION_PHASE: 'action phase',
+  POINTS_PHASE: 'points phase'
 };
