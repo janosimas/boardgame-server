@@ -21,6 +21,7 @@ import { getPoints } from "./components/getPoints";
 import { TRANSLATION_OPTIONS, SOURCE_LANGUAGE, DESTIN_LANGUAGE, IMAGE_OPTIONS } from "./components/gameOptions";
 
 import dotenv from "dotenv";
+import { PHASE } from "./components/phase.js";
 dotenv.config();
 
 const LanguageGame = Game({
@@ -50,19 +51,35 @@ const LanguageGame = Game({
       if(selected_option === G.secret.currentContext.right_option)
       {
         const player = G.players[ctx.currentPlayer];
-        player.points += getPoints(G, ctx);
+        const points = getPoints(G, ctx);
+        G.currentContext = points;
+        player.points += points;
       }
 
-      ctx.events.endTurn();
+      ctx.events.endPhase();
     },
 
     selectPictureToShow: (G, ctx, selected_card) => {
       if(selected_card < 0 || selected_card > IMAGE_OPTIONS)
         return INVALID_MOVE;
 
+    },
+
+    endTurn: (G, ctx) => {
+      ctx.events.endTurn();
     }
   },
   flow: {
+
+      startingPhase: PHASE.ACTION_PHASE,
+      phases: {
+        [PHASE.ACTION_PHASE]: {
+          allowedMoves: ['selectTranslation', 'selectPictureToShow'],
+        },
+        [PHASE.POINTS_PHASE]:{
+          allowedMoves: ['endTurn'],
+        }
+      },
     onTurnBegin: (G, ctx) => {
       const currentWordIndex = parseInt(
         ctx.random.Number() * G.secret.words.length,
