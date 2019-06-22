@@ -8,11 +8,11 @@
 
 import React from 'react';
 import { Client } from 'boardgame.io/react';
-import Splendor from '../game';
+import LanguageGame from '../game';
 import Board from './board';
 
 const App = Client({
-  game: Splendor,
+  game: LanguageGame,
   board: Board,
   debug: false,
   multiplayer: true,
