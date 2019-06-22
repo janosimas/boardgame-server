@@ -6,14 +6,9 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import tic_tac_toe from './tic-tac-toe';
 import LanguageGame from './language-game';
 
 const routes = [
-  {
-    name: 'Tic-Tac-Toe',
-    routes: tic_tac_toe.routes,
-  },
   {
     name: 'Language game',
     routes: LanguageGame.routes,
