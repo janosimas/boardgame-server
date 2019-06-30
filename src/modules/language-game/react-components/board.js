@@ -66,6 +66,8 @@ class Board extends React.Component {
             options={G.currentContext.translations}
             onSelectTranslation={this.selectTranslation}
           />
+          <div>Translations powered by <a href="http://translate.yandex.com/" rel="noopener noreferrer" target="_blank">Yandex.Translate</a></div>
+          <div>Images powered by <a href="https://pixabay.com/" rel="noopener noreferrer" target="_blank">Pixabay</a></div>
         </div>
       );
     } else {
