@@ -1,15 +1,14 @@
 import React from "react";
 import { isNil } from "ramda";
+import { UI, Card } from "boardgame.io/ui";
 
 const Hint = props => {
   if (isNil(props.image))
     return (
-      <div
+      <Card
         key={props.index}
         style={{
-          width: "30px",
-          height: "70px",
-          border: "1px solid black"
+          margin: "10px"
         }}
         onClick={() => props.onTakeHint(props.index)}
       />
@@ -28,8 +27,7 @@ const Hint = props => {
 };
 
 export const HintBlock = props => {
-  if(isNil(props.options))
-    return null;
+  if (isNil(props.options)) return null;
 
   const list = props.options.map((image, index) => (
     <Hint
@@ -39,13 +37,19 @@ export const HintBlock = props => {
       onTakeHint={props.onTakeHint}
     />
   ));
+
   return (
-    <div
-      style={{
-        display: "flex"
-      }}
-    >
-      {list}
-    </div>
+    <UI>
+      <div
+        style={{
+          width: "70vw",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-evenly"
+        }}
+      >
+        {list}
+      </div>
+    </UI>
   );
 };

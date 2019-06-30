@@ -9,6 +9,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import App from './modules/app';
+// import App from './modules/lobby';
 
 render(
   <App />,

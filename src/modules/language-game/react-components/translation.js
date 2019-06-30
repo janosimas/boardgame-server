@@ -2,8 +2,7 @@ import React from "react";
 import { isNil } from "ramda";
 
 export const OptionsComponent = props => {
-  if(isNil(props.options))
-    return null;
+  if (isNil(props.options)) return null;
 
   const list = props.options.map((translation, index) => (
     <TranslationOption
@@ -17,7 +16,9 @@ export const OptionsComponent = props => {
     <div
       style={{
         display: "flex",
-        justifyContent: "space-around"
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        marginTop: "5px"
       }}
     >
       {list}

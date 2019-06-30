@@ -7,7 +7,7 @@
  */
 
 import { Game } from "boardgame.io/core";
-import { INVALID_MOVE } from "boardgame.io/dist/core";
+import { INVALID_MOVE } from "boardgame.io/core";
 
 import { contains, map, indexOf, isNil } from "ramda";
 

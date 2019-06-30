@@ -39,19 +39,24 @@ class Board extends React.Component {
     const G = this.props.G;
     const ctx = this.props.ctx;
     const playerID = this.props.playerID;
-    if(!isNil(ctx.gameover))
-    {
-      return(
+    if (!isNil(ctx.gameover)) {
+      return (
         <div>
           <h1>We have a winner!!!</h1>
           <div>Winner: {ctx.gameover}</div>
         </div>
-      )
+      );
     }
 
     if (ctx.phase === PHASE.ACTION_PHASE) {
       return (
-        <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column"
+          }}
+        >
           <h1>{G.currentContext.word}</h1>
           <HintBlock
             options={G.currentContext.revealed_images}

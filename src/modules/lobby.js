@@ -6,15 +6,13 @@
  * https://opensource.org/licenses/MIT.
  */
 
-import React from 'react';
-import { Lobby } from 'boardgame.io/react';
-import { default as BoardSplendor} from './splendor/components/board.js'
-import { default as Splendor} from './splendor/game.js'
-import './app.css';
+import React from "react";
+import { Lobby } from "boardgame.io/react";
+import { default as Board } from "./language-game/react-components/board.js";
+import { default as Game } from "./language-game/game.js";
+import "./app.css";
 
-const importedGames = [
-  { game: Splendor, board: BoardSplendor },
-];
+const importedGames = [{ game: Game, board: Board }];
 
 // CSS for the sidebar is taken from vue.css
 const App = () => (
@@ -22,8 +20,8 @@ const App = () => (
     <h1>Lobby</h1>
 
     <Lobby
-      gameServer="http://localhost:8000"
-      lobbyServer="http://localhost:8000"
+      gameServer={`https://${window.location.hostname}:8000`}
+      lobbyServer={`https://${window.location.hostname}:8000`}
       gameComponents={importedGames}
     />
   </div>
