@@ -7,7 +7,6 @@
  */
 
 import { Game } from "boardgame.io/core";
-import { INVALID_MOVE } from "boardgame.io/core";
 
 import { contains, map, indexOf, isNil } from "ramda";
 
@@ -16,17 +15,16 @@ import { default as german } from "./languages/de-de.js";
 import { getTranslation } from "./components/getTranslation";
 import { getImages } from "./components/getImages";
 import { getCompleteTextFromWord } from "./components/getCompleteTextFromWord";
-import { getPoints } from "./components/getPoints";
-
+import { PHASE } from "./components/phase.js";
+import { selectTranslationMove } from "./components/selectTranslationMove";
+import { takeHintMove } from "./takeHintMove";
 import {
   TRANSLATION_OPTIONS,
   SOURCE_LANGUAGE,
-  DESTIN_LANGUAGE,
-  IMAGE_OPTIONS
+  DESTIN_LANGUAGE
 } from "./components/gameOptions";
 
 import dotenv from "dotenv";
-import { PHASE } from "./components/phase.js";
 dotenv.config();
 
 const LanguageGame = Game({
@@ -49,29 +47,11 @@ const LanguageGame = Game({
   },
 
   moves: {
-    selectTranslation: (G, ctx, selected_option) => {
-      if (selected_option < 0 || selected_option > TRANSLATION_OPTIONS)
-        return INVALID_MOVE;
+    selectTranslation: selectTranslationMove,
 
-      if (selected_option === G.secret.currentContext.right_option) {
-        const player = G.players[ctx.currentPlayer];
-        const points = getPoints(G, ctx);
-        G.currentContext.points = points;
-        player.points += points;
-      } else {
-        G.currentContext.points = 0;
-      }
-    },
+    takeHint: takeHintMove,
 
-    takeHint: (G, ctx, selected_hint) => {
-      if (selected_hint < 0 || selected_hint > IMAGE_OPTIONS)
-        return INVALID_MOVE;
-
-      G.currentContext.revealed_images[selected_hint] =
-        G.secret.currentContext.images[selected_hint];
-    },
-
-    endTurn: (G, ctx) => {
+    endTurn: (_G, ctx) => {
       ctx.events.endTurn();
     }
   },
@@ -81,45 +61,24 @@ const LanguageGame = Game({
       [PHASE.ACTION_PHASE]: {
         next: PHASE.POINTS_PHASE,
         allowedMoves: ["selectTranslation", "takeHint"],
-        endPhaseIf: (G, ctx) => !isNil(G.currentContext.points),
+        endPhaseIf: (G, _ctx) => !isNil(G.currentContext.points),
         onPhaseBegin: (G, ctx) => {
-          const currentWordIndex = parseInt(
-            ctx.random.Number() * G.secret.words.length,
-            10
-          );
-          let indexOfWordsToTranslate = [currentWordIndex];
-          for (let i = 0; i < TRANSLATION_OPTIONS; ++i) {
-            for (;;) {
-              // get random words different from the target word
-              let index = parseInt(
-                ctx.random.Number() * G.secret.words.length,
-                10
-              );
-              if (!contains(index, indexOfWordsToTranslate)) {
-                indexOfWordsToTranslate.push(index);
-                break;
-              }
-            }
-          }
-          indexOfWordsToTranslate = ctx.random.Shuffle(indexOfWordsToTranslate);
+          let wordsToTranslate = ctx.random.Shuffle(G.secret.words).slice(1, 5);
 
-          const currentWordItem = G.secret.words[currentWordIndex];
+          const currentWordItem = wordsToTranslate[0];
           G.currentContext = {
             word: getCompleteTextFromWord(currentWordItem),
             translations: []
           };
 
+          wordsToTranslate = ctx.random.Shuffle(wordsToTranslate);
+
           G.secret.currentContext = {
-            right_option: indexOf(currentWordIndex, indexOfWordsToTranslate)
+            right_option: indexOf(currentWordItem, wordsToTranslate)
           };
 
-          const wordsToTranslate = map(
-            index => G.secret.words[index].word,
-            indexOfWordsToTranslate
-          );
-
           G.currentContext.translations = map(
-            word => getTranslation(word, SOURCE_LANGUAGE, DESTIN_LANGUAGE),
+            wordItem => getTranslation(wordItem.word, SOURCE_LANGUAGE, DESTIN_LANGUAGE),
             wordsToTranslate
           );
 
@@ -131,10 +90,10 @@ const LanguageGame = Game({
       [PHASE.POINTS_PHASE]: {
         next: PHASE.ACTION_PHASE,
         allowedMoves: ["endTurn"],
-        onTurnEnd: (G, ctx) => ctx.events.endPhase()
+        onTurnEnd: (_G, ctx) => ctx.events.endPhase()
       }
     },
-    onTurnEnd: (G, ctx) => {
+    onTurnEnd: (G, _ctx) => {
       G.currentContext = undefined;
       G.secret.currentContext = undefined;
     },
