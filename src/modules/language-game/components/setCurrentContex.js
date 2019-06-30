@@ -31,7 +31,7 @@ const fromOriginalToTranslation = (G, _ctx, wordsToTranslate, currentWordItem) =
 }
 
 export const setCurrentContex = (G, ctx) => {
-  let wordsToTranslate = ctx.random.Shuffle(G.secret.words).slice(1, 5);
+  let wordsToTranslate = ctx.random.Shuffle(G.secret.words).slice(0, 5);
   const currentWordItem = wordsToTranslate[0];
 
   wordsToTranslate = ctx.random.Shuffle(wordsToTranslate);
